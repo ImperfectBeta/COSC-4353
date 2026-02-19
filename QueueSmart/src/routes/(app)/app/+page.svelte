@@ -2,10 +2,14 @@
 	import type { PageData } from "./$types";
 	import QueueCard from "$lib/components/queue-card.svelte";
 	import Search from "@lucide/svelte/icons/search";
+	import TicketModal from "$lib/components/ticket-modal.svelte";
+	import type { Queue, QueueEntry } from "$lib/types";
 
 	let { data }: { data: PageData } = $props();
 
 	let searchQuery = $state("");
+	let selectedEntry = $state<(QueueEntry & { queue: Queue }) | null>(null);
+	let ticketModalOpen = $state(false);
 
 	let filteredQueues = $derived(
 		data.suggestedQueues.filter(
@@ -39,7 +43,15 @@
 		{:else}
 			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{#each data.activeQueues as entry}
-					<QueueCard queue={entry.queue} {entry} section="active" />
+					<QueueCard
+						queue={entry.queue}
+						{entry}
+						section="active"
+						onviewticket={() => {
+							selectedEntry = entry;
+							ticketModalOpen = true;
+						}}
+					/>
 				{/each}
 			</div>
 		{/if}
@@ -72,8 +84,18 @@
 
 		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 			{#each filteredQueues as queue}
-				<QueueCard {queue} />
+				<QueueCard
+					{queue}
+					onviewticket={() => (ticketModalOpen = true)}
+				/>
 			{/each}
 		</div>
 	</section>
 </div>
+
+<TicketModal
+	open={ticketModalOpen}
+	queue={selectedEntry?.queue}
+	entry={selectedEntry ?? undefined}
+	onclose={() => (ticketModalOpen = false)}
+/>

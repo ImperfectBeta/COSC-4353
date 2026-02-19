@@ -19,10 +19,12 @@
 		queue,
 		entry,
 		section = "discoverable",
+		onviewticket,
 	}: {
 		queue: Queue;
 		entry?: QueueEntry; // only present if user is in this queue
 		section?: "active" | "discoverable";
+		onviewticket?: (entryId: string) => void;
 	} = $props();
 
 	function getQueueStatusBadgeUI(status: QueueStatus): {
@@ -101,7 +103,7 @@
 					variant="primary"
 					size="sm"
 					class="bg-primary/80 hover:bg-primary"
-					onclick={() => console.log("View Ticket", entry.id)}
+					onclick={() => onviewticket?.(entry.id)}
 				>
 					<TicketIcon size={18} />
 					View Ticket

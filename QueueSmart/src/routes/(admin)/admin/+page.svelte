@@ -10,7 +10,7 @@
     const priorityColor: Record<string, string> = {
         high:   'text-red-500 bg-red-500/10 border-red-500/20',
         medium: 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20',
-        low:    'text-teal bg-teal/10 border-teal/20',
+        low:    'text-green-400 bg-green-500/10 border-green-500/20',
     };
 
     $: svc = $services ?? [];
@@ -58,6 +58,9 @@
                     <th class="px-6 py-3">Status</th>
                     <th class="px-6 py-3">Actions</th>
                 </tr>
+                <tr>
+                    <td colspan="5" style="height: 2px; background: var(--color-primary-foreground); padding: 0;"></td>
+                </tr>
             </thead>
             <tbody class="divide-y divide-navy-600">
                 {#each svc as service (service.id)}
@@ -81,6 +84,7 @@
                         <td class="px-6 py-4">
                             <button
                                 type="button"
+                                on:click={() => toggleQueue(service.id)}
                                 class={
                                     `text-xs px-3 py-1.5 rounded border transition-all ${service.isOpen
                                         ? 'border-red-500/30 text-red-400 hover:bg-red-500/10'

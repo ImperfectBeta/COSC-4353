@@ -10,9 +10,16 @@
 	--color-accent: #3a506b;
 	--color-accent-foreground: #ffffff;
 	--color-foreground: #0b132b;
-	--color-muted-foreground: #1c2541;
+	--color-muted: #1c2541;
+	--color-muted-foreground: #ffffff;
 	--color-background: #f4f4f4;
+	--color-destructive: #e74c3c;
+	--color-destructive-foreground: #ffffff;
 
 	--font-arvo: "Arvo", serif;
 	--font-nunito: "Nunito", sans-serif;
+}
+
+input {
+	@apply h-9 flex text-foreground shadow-sm rounded-full hover:bg-accent/15 placeholder:text-foreground/50 border focus-within:border-accent hover:border-accent border-accent/50 bg-accent/10 focus-within:bg-accent/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/75 disabled:cursor-not-allowed disabled:opacity-50;
 }

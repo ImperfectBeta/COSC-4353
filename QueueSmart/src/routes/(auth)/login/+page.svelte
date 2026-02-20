@@ -1,7 +1,10 @@
 <script lang="ts">
+  import { Eye, EyeOff } from "@lucide/svelte";
+
   let email: string = '';
   let password: string = '';
   let errorMessage: string = '';
+  let showPassword: boolean = false;
 
   $: isEmailValid = email.includes('@') && email.includes('.');
   // password must be atleast 8 characters and include a special character
@@ -16,6 +19,10 @@
     }
     errorMessage = '';
     alert(`wow you logged in`);
+  }
+
+  function togglePassword() {
+    showPassword = !showPassword;
   }
 </script>
 
@@ -62,18 +69,24 @@
             Password
           </label>
           <input 
-            type="password" 
+            type={showPassword ? "text" : "password"} 
             id="password"
             bind:value={password}
-            class="w-full h-[44px] border border-[#6C6A6A] rounded-[8px] px-4 text-[#3A506B] placeholder:text-[#AFADAD] focus:outline-none focus:border-[#5BC0BE] focus:ring-1 focus:ring-[#5BC0BE] bg-transparent transition-colors"
+            class="w-full h-[44px] border border-[#6C6A6A] rounded-[8px] px-4 pr-10 text-[#3A506B] placeholder:text-[#AFADAD] focus:outline-none focus:border-[#5BC0BE] focus:ring-1 focus:ring-[#5BC0BE] bg-transparent transition-colors"
             required
           />
+          <button type="button" on:click={togglePassword} class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#6C6A6A] hover:text-[#5BC0BE] transition-colors">
+            {#if showPassword}
+              <EyeOff class="w-5 h-5" />
+            {:else}
+              <Eye class="w-5 h-5" />
+            {/if}
+          </button>
         </div>
 
         <button 
           type="submit"
-          disabled={!isFormValid}
-          class="mt-2 w-[181px] h-[43px] bg-[#3A506B] hover:bg-[#2c3d52] disabled:bg-gray-400 disabled:cursor-not-allowed text-[#FFFFFF] text-[20px] rounded-[8px] mx-auto transition-colors"
+          class="mt-2 w-[181px] h-[43px] bg-[#3A506B] hover:bg-[#2c3d52] text-[#FFFFFF] text-[20px] rounded-[8px] mx-auto transition-colors"
         >
           Login
         </button>

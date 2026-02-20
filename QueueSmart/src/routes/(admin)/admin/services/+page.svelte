@@ -102,7 +102,7 @@
   <!-- Service Cards -->
   <div class="grid grid-cols-1 gap-4">
     {#each svc as service (service.id)}
-      <div class="rounded-xl p-5 flex items-center gap-4" style="background:var(--color-muted-foreground); border:1px solid rgba(0,0,0,0.12)">
+      <div class="rounded-xl p-5 flex items-center gap-4" style="background:var(--color-muted); border:1px solid rgba(0,0,0,0.12)">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-3">
             <h3 class="font-semibold" style="color:var(--color-primary-foreground)">{service.name}</h3>

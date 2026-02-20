@@ -90,7 +90,7 @@
 
   {#if selectedService}
     <!-- Queue Panel -->
-    <div class="rounded-xl overflow-hidden" style="background:var(--color-muted-foreground); border:1px solid rgba(0,0,0,0.12)">
+    <div class="rounded-xl overflow-hidden" style="background:var(--color-muted); border:1px solid rgba(0,0,0,0.12)">
       <div class="px-6 py-4" style="border-bottom:1px solid rgba(0,0,0,0.12); display:flex; align-items:center; justify-content:space-between">
         <div>
           <h3 class="font-semibold text-white">{selectedService.name}</h3>

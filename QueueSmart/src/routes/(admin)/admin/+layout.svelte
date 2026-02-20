@@ -10,7 +10,7 @@
 
 <div class="flex h-screen font-mono overflow-hidden" style="background:var(--color-foreground); color:var(--color-primary-foreground)">
   <!-- Sidebar -->
-  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:var(--color-muted-foreground); border-right:1px solid rgba(0,0,0,0.12)">
+  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:var(--color-muted); border-right:1px solid rgba(0,0,0,0.12)">
     <div class="px-6 py-6" style="border-bottom:1px solid rgba(0,0,0,0.12)">
       <span class="text-sm uppercase tracking-widest" style="color:var(--color-background)">QueueSmart</span>
       <h1 class="text-xl font-bold" style="color:var(--color-primary); margin-top:.25rem">Admin Panel</h1>

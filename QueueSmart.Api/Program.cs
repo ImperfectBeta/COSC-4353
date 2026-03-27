@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.Converters.Add(
             new JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
     });
@@ -17,8 +18,10 @@ builder.Services.AddOpenApi();
 // in-memory stores as singletons (a singleton is a class that can only have one instance)
 builder.Services.AddSingleton<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IQueueService, QueueService>();
 
 // CORS policy
 builder.Services.AddCors(options =>

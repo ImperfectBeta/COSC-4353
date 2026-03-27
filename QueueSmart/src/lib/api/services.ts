@@ -95,3 +95,34 @@ export async function fetchStatistics(): Promise<StatisticsResponse> {
 	const res = await fetch(`${BASE}/history/statistics`);
 	return handleResponse<StatisticsResponse>(res);
 }
+
+export interface JoinQueueRequest {
+    userId: number;
+    serviceId: number;
+    priority: number;
+}
+
+export interface QueueEntryResponse {
+    id: number;
+    userId: number;
+    serviceId: number;
+    joinedAt: string;
+    priority: number;
+    status: string;
+    position: number;
+    estimatedWaitMinutes: number;
+}
+
+export async function joinQueue(data: JoinQueueRequest): Promise<QueueEntryResponse> {
+    const res = await fetch(`${BASE}/queue/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+    });
+    return handleResponse<QueueEntryResponse>(res);
+}
+
+export async function fetchUserNotifications(userId: number): Promise<string[]> {
+    const res = await fetch(`${BASE}/notifications/${userId}`);
+    return handleResponse<string[]>(res);
+}

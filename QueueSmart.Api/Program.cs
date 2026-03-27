@@ -17,6 +17,8 @@ builder.Services.AddOpenApi();
 // in-memory stores as singletons (a singleton is a class that can only have one instance)
 builder.Services.AddSingleton<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
+builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
 
 // CORS policy
 builder.Services.AddCors(options =>

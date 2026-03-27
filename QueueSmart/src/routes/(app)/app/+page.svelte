@@ -22,7 +22,7 @@
 	);
 </script>
 
-<div class="space-y-8">
+<div class="space-y-8 pb-12">
 	<section>
 		<h1 class="text-3xl font-bold tracking-tight">
 			Welcome back, {data.user.name}
@@ -77,7 +77,9 @@
 					type="search"
 					placeholder="Find a queue"
 					bind:value={searchQuery}
-					class="w-full px-3 py-1 pl-9"
+					class="w-full bg-accent/25 border rounded-lg pl-9 py-2.5 text-sm text-foreground
+                   placeholder:text-foreground/70! outline-none transition-colors
+                   focus:border-primary"
 				/>
 			</div>
 		</div>

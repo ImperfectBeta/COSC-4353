@@ -1,44 +1,78 @@
 <script lang="ts">
-  import { page } from '$app/stores';
+	import { page } from "$app/stores";
+	import {
+		CogIcon,
+		ListIcon,
+		ShieldBan,
+		ClockIcon,
+		LogOutIcon,
+	} from "@lucide/svelte";
 
-  const nav = [
-    { href: '/admin',          label: 'Dashboard',          icon: '▦' },
-    { href: '/admin/services', label: 'Service Management', icon: '⚙' },
-    { href: '/admin/queue',    label: 'Queue Management',   icon: '≡' },
-  ];
+	const nav = [
+		{ href: "/admin", label: "Dashboard", icon: ShieldBan },
+		{ href: "/admin/services", label: "Service Management", icon: CogIcon },
+		{ href: "/admin/queue", label: "Queue Management", icon: ListIcon },
+		{ href: "/admin/history", label: "History", icon: ClockIcon },
+	];
 </script>
 
-<div class="flex h-screen font-mono overflow-hidden" style="background:var(--color-foreground); color:var(--color-primary-foreground)">
-  <!-- Sidebar -->
-  <aside class="w-60 flex-shrink-0 flex flex-col" style="background:var(--color-muted); border-right:1px solid rgba(0,0,0,0.12)">
-    <div class="px-6 py-6" style="border-bottom:1px solid rgba(0,0,0,0.12)">
-      <span class="text-sm uppercase tracking-widest" style="color:var(--color-background)">QueueSmart</span>
-      <h1 class="text-xl font-bold" style="color:var(--color-primary); margin-top:.25rem">Admin Panel</h1>
-    </div>
+<div
+	class="flex h-screen font-sans overflow-hidden bg-foreground text-primary-foreground"
+>
+	<!-- Sidebar -->
+	<aside
+		class="w-60 flex-shrink-0 flex flex-col bg-muted border-r border-primary/20"
+	>
+		<div class="px-6 py-6 border-b border-primary/20">
+			<span class="text-sm uppercase tracking-widest text-background"
+				>QueueSmart</span
+			>
+			<h1 class="text-xl font-bold text-primary mt-1">Admin Panel</h1>
+		</div>
 
-    <nav class="flex-1 py-6 px-3" style="display:flex; flex-direction:column; gap:.25rem">
-      {#each nav as item}
-        {@const active = $page.url.pathname === item.href}
-        <a
-          href={item.href}
-          class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm"
-          style={active
-            ? 'background: rgba(91,192,190,0.08); color: var(--color-primary); border: 1px solid rgba(91,192,190,0.12)'
-            : 'color: var(--color-background); border: 1px solid transparent'}
-        >
-          <span class="text-base">{item.icon}</span>
-          {item.label}
-        </a>
-      {/each}
-    </nav>
+		<nav class="flex-1 py-6 px-3 flex flex-col gap-1">
+			{#each nav as item}
+				{@const active = $page.url.pathname === item.href}
+				<a
+					href={item.href}
+					class={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm border transition-colors ${
+						active
+							? "bg-primary/10 text-primary border-primary/20"
+							: "text-background border-transparent hover:bg-primary/5"
+					}`}
+				>
+					<span class="text-base"
+						><svelte:component
+							this={item.icon}
+							class="size-4"
+						/></span
+					>
+					{item.label}
+				</a>
+			{/each}
+		</nav>
 
-    <div class="px-6 py-5 text-xs" style="border-top:1px solid rgba(0,0,0,0.12); color:var(--color-background)">
-      Logged in as <span style="color:var(--color-primary)">admin@queuesmart.io</span>
-    </div>
-  </aside>
+		<div
+			class="px-6 py-5 text-xs border-t border-primary/20 text-background"
+		>
+			<i class="opacity-75">THIS IS FAKE LOGIN INFO</i> Logged in as
+			<span class="text-primary">admin@queuesmart.io</span>
+		</div>
 
-  <!-- Main content -->
-  <main class="flex-1 overflow-y-auto">
-    <slot />
-  </main>
+		<div class="px-3 py-5 border-t border-primary/20">
+			<a
+				href="/"
+				onclick={() => console.log("logout")}
+				class="flex items-center gap-3 w-full px-4 py-2.5 rounded-lg text-sm text-background border border-transparent hover:bg-primary/5 transition-colors cursor-pointer"
+			>
+				<LogOutIcon size={18} />
+				Logout
+			</a>
+		</div>
+	</aside>
+
+	<!-- Main content -->
+	<main class="flex-1 overflow-y-auto">
+		<slot />
+	</main>
 </div>

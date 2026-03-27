@@ -6,5 +6,10 @@ export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	ssr: {
 		noExternal: ['@lucide/svelte']
+	},
+	server: {
+		proxy: {
+			'/api': 'http://localhost:5201'
+		}
 	}
 });

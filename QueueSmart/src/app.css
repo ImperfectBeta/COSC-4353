@@ -20,6 +20,6 @@
 	--font-nunito: "Nunito", sans-serif;
 }
 
-input {
+/* input {
 	@apply h-9 flex text-foreground shadow-sm rounded-full hover:bg-accent/15 placeholder:text-foreground/50 border focus-within:border-accent hover:border-accent border-accent/50 bg-accent/10 focus-within:bg-accent/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/75 disabled:cursor-not-allowed disabled:opacity-50;
-}
+} */

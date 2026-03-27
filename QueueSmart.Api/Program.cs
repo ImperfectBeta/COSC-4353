@@ -1,41 +1,47 @@
+using System.Text.Json.Serialization;
+using QueueSmart.Api.Services;
+
+// builder is used to build the application
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// controllers w/ JSON enum serialization as camelCase strings
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
+    });
+
 builder.Services.AddOpenApi();
 
+// in-memory stores as singletons (a singleton is a class that can only have one instance)
+builder.Services.AddSingleton<IServiceStore, ServiceStore>();
+builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
+
+// CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// app is the application
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// if the application is in development mode, map the OpenApi
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+// use the CORS policy
+app.UseCors("AllowFrontend");
+// map the controllers
+app.MapControllers();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+// run the application
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

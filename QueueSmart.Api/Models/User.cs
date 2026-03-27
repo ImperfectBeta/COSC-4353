@@ -1,11 +1,15 @@
 namespace QueueSmart.Api.Models;
 
+// USER ROLE ENUM
+
 public enum UserRole
 {
     User,
     ServiceAdmin,
     SystemAdmin
 }
+
+// USER MODEL (whoever is doing the auth stuff can change this!!!!)
 
 public class User
 {

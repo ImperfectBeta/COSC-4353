@@ -36,3 +36,30 @@ export interface QueueEntry {
 	estimatedWaitTime: number; // in minutes
 	status: QueueEntryStatus;
 }
+
+// SERVICES
+
+export type PriorityLevel = "low" | "medium" | "high";
+
+export interface Service {
+	id: string;
+	name: string;
+	description: string;
+	duration: number;
+	priority: PriorityLevel;
+	isOpen: boolean;
+	queueLength: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+// HISTORY
+
+export interface HistoryEntry {
+	id: string;
+	serviceId: string;
+	serviceName: string;
+	action: string;
+	timestamp: string;
+	details: string | null;
+}

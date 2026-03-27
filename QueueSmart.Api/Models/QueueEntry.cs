@@ -1,4 +1,4 @@
-namespace QueueSmart.API.Models
+namespace QueueSmart.Api.Models
 {
     public class QueueEntry
     {

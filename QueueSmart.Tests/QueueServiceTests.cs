@@ -1,20 +1,35 @@
-using QueueSmart.API.DTOs;
-using QueueSmart.API.Services;
+using System;
+using QueueSmart.Api.DTOs;
+using QueueSmart.Api.Services;
 using Xunit;
 
 namespace QueueSmart.Tests
 {
+    public class MockNotificationService : INotificationService
+    {
+        public void NotifyUserJoined(int userId, int serviceId, int waitTimeMinutes) { }
+        public void NotifyUserAlmostReady(int userId, int serviceId) { }
+        public List<string> GetUserNotifications(int userId) => new List<string>();
+    }
+
     public class QueueServiceTests
     {
-        private readonly QueueServiceTests _service = new();
+        private readonly QueueService _service;
+
+        public QueueServiceTests()
+        {
+            _service = new QueueService(new MockNotificationService());
+        }
 
         [Fact]
         public void JoinQueue_ShouldAddEntryWithWaitingStatus()
         {
             var request = new JoinQueueRequest { UserId = 1, ServiceId = 1, Priority = 1 };
             var result = _service.JoinQueue(request);
+            
             Assert.Equal("waiting", result.Status);
             Assert.Equal(1, result.UserId);
+            Assert.True(result.EstimatedWaitMinutes >= 0);
         }
 
         [Fact]

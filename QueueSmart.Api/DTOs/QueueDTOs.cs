@@ -1,4 +1,4 @@
-namespace QueueSmart.API.DTOs
+namespace QueueSmart.Api.DTOs
 {
     public class JoinQueueRequest
     {

@@ -2,10 +2,10 @@ using System.Data;
 using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
-using QueueSmart.API.DTOs;
-using QueueSmart.API.Services;
+using QueueSmart.Api.DTOs;
+using QueueSmart.Api.Services;
 
-namespace QueueSmart.API.Controllers
+namespace QueueSmart.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

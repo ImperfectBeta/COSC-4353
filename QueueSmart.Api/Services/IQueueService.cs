@@ -1,7 +1,7 @@
-using QueueSmart.API.DTOs;
-using QueueSmart.API.Models;
+using QueueSmart.Api.DTOs;
+using QueueSmart.Api.Models;
 
-namespace QueueSmart.API.Services
+namespace QueueSmart.Api.Services
 {
     public interface IQueueService
     {

@@ -1,13 +1,16 @@
-using System.Data.Common;
-using QueueSmart.API.DTOs;
-using QueueSmart.API.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using QueueSmart.Api.DTOs;
+using QueueSmart.Api.Models;
 
-namespace QueueSmart.API.Services
+namespace QueueSmart.Api.Services
 {
     public class QueueService : IQueueService
     {
         private static List<QueueEntry> _queue = new();
         private static int _nextId = 1;
+        private readonly INotificationService _notificationService;
 
         private static Dictionary<int, int> _serviceDurations = new()
         {
@@ -15,6 +18,11 @@ namespace QueueSmart.API.Services
             { 2, 15 },
             { 3, 5 }
         };
+
+        public QueueService(INotificationService notificationService)
+        {
+            _notificationService = notificationService;
+        }
 
         public QueueEntryResponse JoinQueue(JoinQueueRequest request)
         {
@@ -38,7 +46,19 @@ namespace QueueSmart.API.Services
 
             _queue.Add(entry);
 
-            return MapToResponse(entry);
+            // Calculate accurate wait time upon joining
+            var orderedQueue = GetOrderedQueue(request.ServiceId);
+            int position = orderedQueue.FindIndex(e => e.Id == entry.Id) + 1;
+            int estimatedWait = CalculateWaitTime(request.ServiceId, position);
+
+            // Trigger Notification
+            _notificationService.NotifyUserJoined(request.UserId, request.ServiceId, estimatedWait);
+
+            var response = MapToResponse(entry);
+            response.Position = position;
+            response.EstimatedWaitMinutes = estimatedWait;
+            
+            return response;
         }
 
         public bool LeaveQueue(int entryId, int userId)
@@ -68,10 +88,20 @@ namespace QueueSmart.API.Services
 
         public QueueEntryResponse? ServeNext(int serviceId)
         {
-            var next = GetOrderedQueue(serviceId).FirstOrDefault();
+            var orderedQueue = GetOrderedQueue(serviceId);
+            var next = orderedQueue.FirstOrDefault();
+            
             if (next == null) return null;
 
             next.Status = "serving";
+
+            // Check who is now at the front of the line to notify them
+            var userAlmostReady = orderedQueue.Skip(1).FirstOrDefault();
+            if (userAlmostReady != null)
+            {
+                _notificationService.NotifyUserAlmostReady(userAlmostReady.UserId, serviceId);
+            }
+
             return MapToResponse(next);
         }
 
@@ -100,8 +130,8 @@ namespace QueueSmart.API.Services
                 JoinedAt = entry.JoinedAt,
                 Priority = entry.Priority,
                 Status = entry.Status,
-                Position = 0,
-                EstimatedWaitMinutes = 0
+                Position = 0, 
+                EstimatedWaitMinutes = 0 
             };
         }
     }

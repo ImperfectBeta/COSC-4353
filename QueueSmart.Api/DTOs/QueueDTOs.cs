@@ -14,7 +14,7 @@ namespace QueueSmart.API.DTOs
         public int ServiceId { get; set; }
         public DateTime JoinedAt { get; set; }
         public int Priority { get; set; }
-        public string Status { get; set; }
+        public string Status { get; set; } = string.Empty;
         public int Position { get; set; }
         public int EstimatedWaitMinutes { get; set; }
     }

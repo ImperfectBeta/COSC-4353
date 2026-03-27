@@ -7,8 +7,8 @@ using QueueSmart.API.Services;
 
 namespace QueueSmart.API.Controllers
 {
-    [APIController]
-    [ResourceConsumption("api/[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
     public class QueueController : ControllerBase
     {
         private readonly IQueueService _queueService;

@@ -19,7 +19,7 @@ namespace QueueSmart.API.Services
         public QueueEntryResponse JoinQueue(JoinQueueRequest request)
         {
             bool alreadyInQueue = _queue.Any(e =>
-                e.UserId == HttpRequestError.UserId &&
+                e.UserId == request.UserId &&
                 e.ServiceId == request.ServiceId &&
                 e.Status == "waiting");
 

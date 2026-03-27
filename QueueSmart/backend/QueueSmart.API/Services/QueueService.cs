@@ -1,0 +1,108 @@
+using System.Data.Common;
+using QueueSmart.API.DTOs;
+using QueueSmart.API.Models;
+
+namespace QueueSmart.API.Services
+{
+    public class QueueService : IQueueService
+    {
+        private static List<QueueEntry> _queue = new();
+        private static int _nextId = 1;
+
+        private static Dictionary<int, int> _serviceDurations = new()
+        {
+            { 1, 10 },
+            { 2, 15 },
+            { 3, 5 }
+        };
+
+        public QueueEntryResponse JoinQueue(JoinQueueRequest request)
+        {
+            bool alreadyInQueue = _queue.Any(e =>
+                e.UserId == HttpRequestError.UserId &&
+                e.ServiceId == request.ServiceId &&
+                e.Status == "waiting");
+
+            if (alreadyInQueue)
+                throw new InvalidOperationException("User is already in this queue.");
+
+            var entry = new QueueEntry
+            {
+                Id = _nextId++,
+                UserId = request.UserId,
+                ServiceId = request.ServiceId,
+                JoinedAt = DateTime.UtcNow,
+                Priority = request.Priority,
+                Status = "waiting"
+            };
+
+            _queue.Add(entry);
+
+            return MapToResponse(entry);
+        }
+
+        public bool LeaveQueue(int entryId, int userId)
+        {
+            var entry = _queue.FirstOrDefault(e =>
+                e.Id == entryId &&
+                e.UserId == userId &&
+                e.Status == "waiting");
+
+            if (entry == null) return false;
+
+            entry.Status = "cancelled";
+            return true;
+        }
+
+        public List<QueueEntryResponse> GetQueue(int serviceId)
+        {
+            var ordered = GetOrderedQueue(serviceId);
+            return ordered.Select((e, index) =>
+            {
+                var response = MapToResponse(e);
+                response.Position = index + 1;
+                response.EstimatedWaitMinutes = CalculateWaitTime(serviceId, index + 1);
+                return response;
+            }).ToList();
+        }
+
+        public QueueEntryResponse? ServeNext(int serviceId)
+        {
+            var next = GetOrderedQueue(serviceId).FirstOrDefault();
+            if (next == null) return null;
+
+            next.Status = "serving";
+            return MapToResponse(next);
+        }
+
+        private List<QueueEntry> GetOrderedQueue(int serviceId)
+        {
+            return _queue
+                .Where(e => e.ServiceId == serviceId && e.Status == "waiting")
+                .OrderByDescending(e => e.Priority)
+                .ThenBy(e => e.JoinedAt)
+                .ToList();
+        }
+
+        private int CalculateWaitTime(int serviceId, int position)
+        {
+            int duration = _serviceDurations.GetValueOrDefault(serviceId, 10);
+            return position * duration;
+        }
+
+        private QueueEntryResponse MapToResponse(QueueEntry entry)
+        {
+            return new QueueEntryResponse
+            {
+                Id = entry.Id,
+                UserId = entry.UserId,
+                ServiceId = entry.ServiceId,
+                JoinedAt = entry.JoinedAt,
+                Priority = entry.Priority,
+                Status = entry.Status,
+                Position = 0,
+                EstimatedWaitMinutes = 0
+            };
+        }
+    }
+}

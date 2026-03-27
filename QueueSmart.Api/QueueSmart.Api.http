@@ -1,0 +1,6 @@
+@QueueSmart.Api_HostAddress = http://localhost:5201
+
+GET {{QueueSmart.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

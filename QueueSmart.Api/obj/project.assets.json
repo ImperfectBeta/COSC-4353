@@ -2471,19 +2471,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/katherinehernandez/.nuget/packages/": {}
+    "/Users/chasebrock/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/QueueSmart.Api.csproj",
+      "projectUniqueName": "/Users/chasebrock/Programming/COSC-4353/QueueSmart.Api/QueueSmart.Api.csproj",
       "projectName": "QueueSmart.Api",
-      "projectPath": "/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/QueueSmart.Api.csproj",
-      "packagesPath": "/Users/katherinehernandez/.nuget/packages/",
-      "outputPath": "/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/obj/",
+      "projectPath": "/Users/chasebrock/Programming/COSC-4353/QueueSmart.Api/QueueSmart.Api.csproj",
+      "packagesPath": "/Users/chasebrock/.nuget/packages/",
+      "outputPath": "/Users/chasebrock/Programming/COSC-4353/QueueSmart.Api/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/katherinehernandez/.nuget/NuGet/NuGet.Config"
+        "/Users/chasebrock/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -2507,7 +2507,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
@@ -2547,7 +2547,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.201/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

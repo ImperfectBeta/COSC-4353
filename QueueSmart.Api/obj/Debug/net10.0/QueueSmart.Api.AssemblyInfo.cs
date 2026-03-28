@@ -14,10 +14,17 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
 <<<<<<< HEAD
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad762467c22183bd480ee0902983b51cf5b7bc64")]
 =======
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8120af3ad768f2983b74f1a8f30a4fbe9aaa311c")]
 >>>>>>> 35b2e5a (database set uppy)
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8120af3ad768f2983b74f1a8f30a4fbe9aaa311c")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cca30b9c7ccd2bff594fbde12ce4723485bb004f")]
+>>>>>>> 02abc71 (test build)
+>>>>>>> e6b8c9c (test build)
 [assembly: System.Reflection.AssemblyProductAttribute("QueueSmart.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QueueSmart.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

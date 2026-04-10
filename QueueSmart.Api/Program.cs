@@ -1,9 +1,15 @@
 using System.Text.Json.Serialization;
 using QueueSmart.Api.Services;
+using Microsoft.EntityFrameworkCore;
+using QueueSmart.Api;
 
 // builder is used to build the application
 var builder = WebApplication.CreateBuilder(args);
 
+// we connecting to the database with this one
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
 // controllers w/ JSON enum serialization as camelCase strings
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

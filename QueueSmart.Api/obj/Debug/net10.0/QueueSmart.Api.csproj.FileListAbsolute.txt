@@ -296,3 +296,6 @@
 /Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/obj/Debug/net10.0/QueueSmart.Api.pdb
 /Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/obj/Debug/net10.0/QueueSmart.Api.genruntimeconfig.cache
 /Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/obj/Debug/net10.0/ref/QueueSmart.Api.dll
+/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/bin/Debug/net10.0/BCrypt.Net-Next.dll
+/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/bin/Debug/net10.0/Npgsql.dll
+/Users/katherinehernandez/Programming/School/software/COSC-4353/QueueSmart.Api/bin/Debug/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll

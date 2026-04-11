@@ -1,12 +1,30 @@
-namespace QueueSmart.Api.Models
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.SignalR;
+
+namespace QueueSmart.Api.Models;
+
+public class QueueEntry
 {
-    public class QueueEntry
-    {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public int ServiceId { get; set; }
-        public DateTime JoinedAt { get; set; }
-        public int Priority { get; set; }
-        public string Status { get; set; } = "waiting";
-    }
+    [Key]
+    public int QueueEntryId { get; set; }
+
+    [Required]
+    public Guid QueueId { get; set; }
+
+    [Required]
+    public int UserId { get; set; }
+
+    [Required]
+    public int Position { get; set; }
+    public DateTime JoinTime { get; set; } = DateTime.UtcNow;
+
+    [Required]
+    public string Status { get; set; } = "waiting";
+
+    [ForeignKey("QueueId")]
+    public Queue? Queue { get; set; }
+
+    [ForeignKey("UserId")]
+    public User? User { get; set; }
 }

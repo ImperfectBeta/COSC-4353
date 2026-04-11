@@ -25,10 +25,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddScoped<IQueueStore, QueueStore>();
 builder.Services.AddScoped<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
-builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
-builder.Services.AddSingleton<IQueueService, QueueService>();
+builder.Services.AddScoped<IQueueService, QueueService>();
 
 // cors policy
 builder.Services.AddCors(options =>

@@ -23,10 +23,8 @@ namespace QueueSmart.Api.Controllers
         {
             if (request.UserId <= 0)
                 return BadRequest("UserId is required.");
-            if (request.ServiceId <= 0)
-                return BadRequest("ServiceId is required.");
-            if (request.Priority < 1 || request.Priority > 3)
-                return BadRequest("Priority must be between 1 and 3.");
+            if (request.QueueId == Guid.Empty)
+                return BadRequest("QueueId is required.");
 
             try
             {
@@ -49,23 +47,23 @@ namespace QueueSmart.Api.Controllers
             return success ? Ok("Removed from queue.") : NotFound("Queue entry not found.");
         }
 
-        [HttpGet("{serviceId}")]
-        public IActionResult GetQueue(int serviceId)
+        [HttpGet("{queueId}")]
+        public IActionResult GetQueue(Guid queueId)
         {
-            if (serviceId <= 0)
-                return BadRequest("ServiceId is required.");
+            if (queueId == Guid.Empty)
+                return BadRequest("QueueId is required.");
 
-            var queue = _queueService.GetQueue(serviceId);
+            var queue = _queueService.GetQueue(queueId);
             return Ok(queue);
         }
 
-        [HttpPost("serve-next/{serviceId}")]
-        public IActionResult ServeNext(int serviceId)
+        [HttpPost("serve-next/{queueId}")]
+        public IActionResult ServeNext(Guid queueId)
         {
-            if (serviceId <= 0)
-                return BadRequest("ServiceId is required.");
+            if (queueId == Guid.Empty)
+                return BadRequest("QueueId is required.");
 
-            var next = _queueService.ServeNext(serviceId);
+            var next = _queueService.ServeNext(queueId);
             return next != null ? Ok(next) : NotFound("No users in queue.");
         }
     }

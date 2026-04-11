@@ -12,12 +12,7 @@ namespace QueueSmart.Api.Services
         private static int _nextId = 1;
         private readonly INotificationService _notificationService;
 
-        private static Dictionary<int, int> _serviceDurations = new()
-        {
-            { 1, 10 },
-            { 2, 15 },
-            { 3, 5 }
-        };
+        // Service duration dummy removed for Guid queueId
 
         public QueueService(INotificationService notificationService)
         {
@@ -28,7 +23,7 @@ namespace QueueSmart.Api.Services
         {
             bool alreadyInQueue = _queue.Any(e =>
                 e.UserId == request.UserId &&
-                e.ServiceId == request.ServiceId &&
+                e.QueueId == request.QueueId &&
                 e.Status == "waiting");
 
             if (alreadyInQueue)
@@ -36,35 +31,34 @@ namespace QueueSmart.Api.Services
 
             var entry = new QueueEntry
             {
-                Id = _nextId++,
+                QueueEntryId = _nextId++,
                 UserId = request.UserId,
-                ServiceId = request.ServiceId,
-                JoinedAt = DateTime.UtcNow,
-                Priority = request.Priority,
+                QueueId = request.QueueId,
+                JoinTime = DateTime.UtcNow,
                 Status = "waiting"
             };
 
             _queue.Add(entry);
 
             // Calculate accurate wait time upon joining
-            var orderedQueue = GetOrderedQueue(request.ServiceId);
-            int position = orderedQueue.FindIndex(e => e.Id == entry.Id) + 1;
-            int estimatedWait = CalculateWaitTime(request.ServiceId, position);
+            var orderedQueue = GetOrderedQueue(request.QueueId);
+            int position = orderedQueue.FindIndex(e => e.QueueEntryId == entry.QueueEntryId) + 1;
+            int estimatedWait = CalculateWaitTime(request.QueueId, position);
 
             // Trigger Notification
-            _notificationService.NotifyUserJoined(request.UserId, request.ServiceId, estimatedWait);
+            _notificationService.NotifyUserJoined(request.UserId, request.QueueId, estimatedWait);
 
             var response = MapToResponse(entry);
             response.Position = position;
             response.EstimatedWaitMinutes = estimatedWait;
-            
+
             return response;
         }
 
         public bool LeaveQueue(int entryId, int userId)
         {
             var entry = _queue.FirstOrDefault(e =>
-                e.Id == entryId &&
+                e.QueueEntryId == entryId &&
                 e.UserId == userId &&
                 e.Status == "waiting");
 
@@ -74,23 +68,23 @@ namespace QueueSmart.Api.Services
             return true;
         }
 
-        public List<QueueEntryResponse> GetQueue(int serviceId)
+        public List<QueueEntryResponse> GetQueue(Guid queueId)
         {
-            var ordered = GetOrderedQueue(serviceId);
+            var ordered = GetOrderedQueue(queueId);
             return ordered.Select((e, index) =>
             {
                 var response = MapToResponse(e);
                 response.Position = index + 1;
-                response.EstimatedWaitMinutes = CalculateWaitTime(serviceId, index + 1);
+                response.EstimatedWaitMinutes = CalculateWaitTime(queueId, index + 1);
                 return response;
             }).ToList();
         }
 
-        public QueueEntryResponse? ServeNext(int serviceId)
+        public QueueEntryResponse? ServeNext(Guid queueId)
         {
-            var orderedQueue = GetOrderedQueue(serviceId);
+            var orderedQueue = GetOrderedQueue(queueId);
             var next = orderedQueue.FirstOrDefault();
-            
+
             if (next == null) return null;
 
             next.Status = "serving";
@@ -99,24 +93,24 @@ namespace QueueSmart.Api.Services
             var userAlmostReady = orderedQueue.Skip(1).FirstOrDefault();
             if (userAlmostReady != null)
             {
-                _notificationService.NotifyUserAlmostReady(userAlmostReady.UserId, serviceId);
+                _notificationService.NotifyUserAlmostReady(userAlmostReady.UserId, queueId);
             }
 
             return MapToResponse(next);
         }
 
-        private List<QueueEntry> GetOrderedQueue(int serviceId)
+        private List<QueueEntry> GetOrderedQueue(Guid queueId)
         {
             return _queue
-                .Where(e => e.ServiceId == serviceId && e.Status == "waiting")
-                .OrderByDescending(e => e.Priority)
-                .ThenBy(e => e.JoinedAt)
+                .Where(e => e.QueueId == queueId && e.Status == "waiting")
+                .OrderBy(e => e.Position)
+                .ThenBy(e => e.JoinTime)
                 .ToList();
         }
 
-        private int CalculateWaitTime(int serviceId, int position)
+        private int CalculateWaitTime(Guid queueId, int position)
         {
-            int duration = _serviceDurations.GetValueOrDefault(serviceId, 10);
+            int duration = 10; // defaults to 10 for now
             return position * duration;
         }
 
@@ -124,14 +118,13 @@ namespace QueueSmart.Api.Services
         {
             return new QueueEntryResponse
             {
-                Id = entry.Id,
+                Id = entry.QueueEntryId,
                 UserId = entry.UserId,
-                ServiceId = entry.ServiceId,
-                JoinedAt = entry.JoinedAt,
-                Priority = entry.Priority,
+                QueueId = entry.QueueId,
+                JoinTime = entry.JoinTime,
                 Status = entry.Status,
-                Position = 0, 
-                EstimatedWaitMinutes = 0 
+                Position = 0,
+                EstimatedWaitMinutes = 0
             };
         }
     }

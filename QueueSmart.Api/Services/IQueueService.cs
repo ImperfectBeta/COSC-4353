@@ -7,7 +7,7 @@ namespace QueueSmart.Api.Services
     {
         QueueEntryResponse JoinQueue(JoinQueueRequest request);
         bool LeaveQueue(int entryId, int userId);
-        List<QueueEntryResponse> GetQueue(int serviceId);
-        QueueEntryResponse? ServeNext(int serviceId);
+        List<QueueEntryResponse> GetQueue(Guid queueId);
+        QueueEntryResponse? ServeNext(Guid queueId);
     }
 }

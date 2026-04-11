@@ -21,5 +21,5 @@ public class Notification
     public string Status { get; set; } = "sent"; 
 
     [ForeignKey("UserId")]
-    public User? User { get; set; }
+    public UserCredential? User { get; set; }
 }

@@ -26,5 +26,5 @@ public class QueueEntry
     public Queue? Queue { get; set; }
 
     [ForeignKey("UserId")]
-    public User? User { get; set; }
+    public UserCredential? User { get; set; }
 }

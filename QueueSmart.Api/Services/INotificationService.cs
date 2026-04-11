@@ -4,7 +4,7 @@ namespace QueueSmart.Api.Services;
 
 public interface INotificationService
 {
-    void NotifyUserJoined(int userId, int serviceId, int waitTimeMinutes);
-    void NotifyUserAlmostReady(int userId, int serviceId);
+    void NotifyUserJoined(int userId, Guid queueId, int waitTimeMinutes);
+    void NotifyUserAlmostReady(int userId, Guid queueId);
     List<string> GetUserNotifications(int userId);
 }

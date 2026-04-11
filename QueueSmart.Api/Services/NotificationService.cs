@@ -17,9 +17,9 @@ public class NotificationService : INotificationService
         _context = context;
     }
 
-    public void NotifyUserJoined(int userId, int serviceId, int waitTimeMinutes)
+    public void NotifyUserJoined(int userId, Guid queueId, int waitTimeMinutes)
     {
-        string msg = $"User {userId}: You joined the queue for Service {serviceId}. Wait time: {waitTimeMinutes} mins.";
+        string msg = $"User {userId}: You joined the queue {queueId}. Wait time: {waitTimeMinutes} mins.";
         _logger.LogInformation(msg);
 
         var notification = new Notification { UserId = userId, Message = msg, Timestamp = DateTime.UtcNow, Status = "sent" };
@@ -27,9 +27,9 @@ public class NotificationService : INotificationService
         _context.SaveChanges();
     }
 
-    public void NotifyUserAlmostReady(int userId, int serviceId)
+    public void NotifyUserAlmostReady(int userId, Guid queueId)
     {
-        string msg = $"User {userId}: You are almost ready for Service {serviceId}!";
+        string msg = $"User {userId}: You are almost ready for queue {queueId}!";
         _logger.LogInformation(msg);
 
         var notification = new Notification { UserId = userId, Message = msg, Timestamp = DateTime.UtcNow, Status = "sent" };

@@ -1,2 +1,9 @@
+<<<<<<< HEAD
+bin/
+obj/
+.DS_Store
+TestResults/
+=======
 bin
 obj
+>>>>>>> main

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using QueueSmart.Api.Data;
 using QueueSmart.Api.Models;
 
 namespace QueueSmart.Api.Services;
@@ -9,6 +11,70 @@ public interface IUserStore
     IEnumerable<User> GetAll();
     User Add(User user);
     bool EmailExists(string email);
+}
+
+public class DbUserStore : IUserStore
+{
+    private readonly AppDbContext _db;
+
+    public DbUserStore(AppDbContext db)
+    {
+        _db = db;
+    }
+
+    public User? GetByEmail(string email) =>
+        _db.UserCredentials
+           .Include(c => c.Profile)
+           .FirstOrDefault(c => c.Email == email.ToLowerInvariant())
+           .ToUser();
+
+    public User? GetById(int id) =>
+        _db.UserCredentials
+           .Include(c => c.Profile)
+           .FirstOrDefault(c => c.Id == id)
+           .ToUser();
+
+    public IEnumerable<User> GetAll() =>
+        _db.UserCredentials
+           .Include(c => c.Profile)
+           .AsEnumerable()
+           .Select(c => c.ToUser()!);
+
+    public User Add(User user)
+    {
+        var credential = new UserCredential
+        {
+            Email = user.Email,
+            PasswordHash = user.PasswordHash,
+            Role = user.Role,
+            Profile = new UserProfile { FullName = user.Name }
+        };
+
+        _db.UserCredentials.Add(credential);
+        _db.SaveChanges();
+
+        user.Id = credential.Id;
+        return user;
+    }
+
+    public bool EmailExists(string email) =>
+        _db.UserCredentials.Any(c => c.Email == email.ToLowerInvariant());
+}
+
+internal static class UserCredentialExtensions
+{
+    public static User? ToUser(this UserCredential? credential)
+    {
+        if (credential is null) return null;
+        return new User
+        {
+            Id = credential.Id,
+            Name = credential.Profile?.FullName ?? string.Empty,
+            Email = credential.Email,
+            PasswordHash = credential.PasswordHash,
+            Role = credential.Role
+        };
+    }
 }
 
 public class InMemoryUserStore : IUserStore

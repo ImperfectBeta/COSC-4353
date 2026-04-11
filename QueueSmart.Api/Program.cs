@@ -23,7 +23,6 @@ builder.Services.AddControllers()
 
 builder.Services.AddOpenApi();
 
-<<<<<<< HEAD
 // PostgreSQL database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -35,7 +34,6 @@ builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddScoped<IUserStore, DbUserStore>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IQueueService, QueueService>();
-=======
 // scoped and singleton services
 builder.Services.AddScoped<IQueueStore, QueueStore>();
 builder.Services.AddScoped<IServiceStore, ServiceStore>();
@@ -45,7 +43,6 @@ builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddScoped<IQueueService, QueueService>();
 builder.Services.AddScoped<IQueueEntryService, QueueEntryService>();
->>>>>>> main
 
 // cors policy
 builder.Services.AddCors(options =>
@@ -61,7 +58,6 @@ builder.Services.AddCors(options =>
 // app is the application
 var app = builder.Build();
 
-<<<<<<< HEAD
 // ensure database is created
 using (var scope = app.Services.CreateScope())
 {
@@ -70,9 +66,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // if the application is in development mode, map the OpenApi
-=======
 // if the application is in development mode, map the openapi
->>>>>>> main
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

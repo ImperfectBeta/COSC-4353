@@ -59,15 +59,15 @@ public class ServiceResponse
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public static ServiceResponse FromService(Service service) => new()
+    public static ServiceResponse FromService(Service service, Queue? activeQueue = null) => new()
     {
         Id = service.Id,
         Name = service.Name,
         Description = service.Description,
         Duration = service.Duration,
         Priority = service.Priority.ToString().ToLower(),
-        IsOpen = service.IsOpen,
-        QueueLength = service.QueueLength,
+        IsOpen = activeQueue != null && activeQueue.Status == "open",
+        QueueLength = activeQueue?.QueueLength ?? 0,
         CreatedAt = service.CreatedAt,
         UpdatedAt = service.UpdatedAt
     };

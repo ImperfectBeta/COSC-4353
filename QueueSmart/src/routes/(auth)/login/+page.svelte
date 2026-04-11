@@ -1,29 +1,57 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import { Eye, EyeOff } from "@lucide/svelte";
+  import { onMount } from "svelte";
+  import { get } from "svelte/store";
 
-  let email: string = '';
-  let password: string = '';
-  let errorMessage: string = '';
+  import { getAuthDestination, loginUser } from "$lib/api/auth";
+  import { authSession, setAuthSession } from "$lib/stores/auth";
+
+  let email: string = "";
+  let password: string = "";
+  let errorMessage: string = "";
   let showPassword: boolean = false;
+  let isSubmitting: boolean = false;
 
-  $: isEmailValid = email.includes('@') && email.includes('.');
-  // password must be atleast 8 characters and include a special character
-  $: isPasswordValid = password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password);
-  
+  $: isEmailValid = email.includes("@") && email.includes(".");
+  $: isPasswordValid = password.length >= 8;
   $: isFormValid = isEmailValid && isPasswordValid;
 
-  function handleLogin(): void {
+  async function handleLogin(): Promise<void> {
     if (!isFormValid) {
-      errorMessage = 'Provide a valid email and password';
+      errorMessage = "Provide a valid email and password.";
       return;
     }
-    errorMessage = '';
-    alert(`wow you logged in`);
+
+    isSubmitting = true;
+    errorMessage = "";
+
+    try {
+      const session = await loginUser({
+        email: email.trim(),
+        password,
+      });
+
+      setAuthSession(session);
+      await goto(getAuthDestination(session.role));
+    } catch (error) {
+      errorMessage = error instanceof Error ? error.message : "Unable to log in.";
+    } finally {
+      isSubmitting = false;
+    }
   }
 
-  function togglePassword() {
+  function togglePassword(): void {
     showPassword = !showPassword;
   }
+
+  onMount(() => {
+    const session = get(authSession);
+
+    if (session) {
+      goto(getAuthDestination(session.role));
+    }
+  });
 </script>
 
 <div class="min-h-screen bg-[#3A506B] flex flex-col items-center justify-center p-6 font-['Inter']">
@@ -86,9 +114,10 @@
 
         <button 
           type="submit"
-          class="mt-2 w-[181px] h-[43px] bg-[#3A506B] hover:bg-[#2c3d52] text-[#FFFFFF] text-[20px] rounded-[8px] mx-auto transition-colors"
+          disabled={isSubmitting}
+          class="mt-2 w-[181px] h-[43px] bg-[#3A506B] hover:bg-[#2c3d52] disabled:opacity-70 disabled:cursor-not-allowed text-[#FFFFFF] text-[20px] rounded-[8px] mx-auto transition-colors"
         >
-          Login
+          {isSubmitting ? "Logging in..." : "Login"}
         </button>
 
       </form>

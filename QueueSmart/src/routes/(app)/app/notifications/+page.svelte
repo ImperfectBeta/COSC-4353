@@ -1,14 +1,31 @@
 <script lang="ts">
 	import { notificationStore } from "$lib/stores/notifications.svelte";
+	import { fetchUserNotifications } from "$lib/api/services";
 	import { BellIcon, InfoIcon, CircleAlertIcon } from "@lucide/svelte";
 	import Button from "$lib/components/button.svelte";
 
 	import { onMount } from "svelte";
 
-	onMount(() => {
-		notificationStore.markAllAsRead();
+	onMount(async () => {
+    	notificationStore.markAllAsRead();
+    
+    	try {
+        	// Fetch real notifications for User 1
+        	const realLogs = await fetchUserNotifications(1);
+        
+        	// Loop through the strings from C# and add them to Svelte's store
+        	realLogs.forEach(logString => {
+            	notificationStore.addNotification({
+                	title: "Queue Update",
+                	message: logString,
+                	type: "queue_update" 
+            	});
+        	});
+    	} catch (error) {
+        	console.error("Could not connect to backend notifications:", error);
+    	}
 	});
-
+	
 	let queueUpdates = $derived(
 		notificationStore.notifications.filter(n => n.type === "queue_update"),
 	);

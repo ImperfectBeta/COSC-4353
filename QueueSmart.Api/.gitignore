@@ -1,1 +1,6 @@
 appsettings.Development.json
+<<<<<<< HEAD
+=======
+bin/
+obj/
+>>>>>>> main

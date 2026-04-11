@@ -4,6 +4,7 @@
 	import type { Queue, QueueEntry, QueueStatus } from "$lib/types";
 	import clsx from "clsx";
 	import type { Component } from "svelte";
+	import { joinQueue } from "$lib/api/services";
 	import {
 		Building2Icon,
 		CircleCheckBigIcon,
@@ -41,6 +42,29 @@
 			default:
 				return { variant: "secondary", icon: InfoIcon };
 		}
+	}
+
+	async function handleJoinClick() {
+    	const cleanId = queue.id.toString().replace(/\D/g, ''); 
+    	const sId = Number(cleanId);
+    
+    	if (isNaN(sId) || sId <= 0) {
+        	alert(`Error: Invalid ID format. (Found: ${queue.id})`);
+        	return;
+    	}
+
+    	try {
+        	const response = await joinQueue({
+            userId: 1, 
+            serviceId: sId, 
+            priority: 1
+        });
+        
+        alert(`Joined! Estimated wait: ${response.estimatedWaitMinutes} minutes.`);
+    	} catch (error) {
+        	console.error("Failed to join queue:", error);
+        	alert("Error: " + error.message);
+    	}
 	}
 
 	let { variant, icon } = $derived(getQueueStatusBadgeUI(queue.status));
@@ -113,7 +137,7 @@
 			<Button
 				variant={queue.status === "open" ? "outline" : "ghost"}
 				size="sm"
-				onclick={() => console.log("Join Queue", queue.id)}
+				onclick={handleJoinClick}
 				disabled={queue.status !== "open"}
 				class={queue.status === "open"
 					? "gap-1"

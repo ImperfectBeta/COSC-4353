@@ -11,14 +11,16 @@ public class HistoryController : ControllerBase
 {
     private readonly IHistoryStore _historyStore;
     private readonly IServiceStore _serviceStore;
+    private readonly IQueueStore _queueStore;
 
-    public HistoryController(IHistoryStore historyStore, IServiceStore serviceStore)
+    public HistoryController(IHistoryStore historyStore, IServiceStore serviceStore, IQueueStore queueStore)
     {
         _historyStore = historyStore;
         _serviceStore = serviceStore;
+        _queueStore = queueStore;
     }
 
-    [HttpGet] // GET /api/history
+    [HttpGet] // get /api/history
     public ActionResult<IEnumerable<ServiceHistoryEntry>> GetAll([FromQuery] Guid? serviceId)
     {
         var entries = serviceId.HasValue
@@ -28,10 +30,10 @@ public class HistoryController : ControllerBase
         return Ok(entries);
     }
 
-    [HttpGet("statistics")] // GET /api/history/statistics
-    public ActionResult<ServiceStatisticsResponse> GetStatistics()
+    [HttpGet("statistics")] // get /api/history/statistics
+    public async Task<ActionResult<ServiceStatisticsResponse>> GetStatistics()
     {
-        var stats = _historyStore.GetStatistics(_serviceStore);
+        var stats = await _historyStore.GetStatisticsAsync(_serviceStore, _queueStore);
         return Ok(stats);
     }
 }

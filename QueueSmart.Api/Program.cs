@@ -2,11 +2,17 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.Data;
 using QueueSmart.Api.Services;
+using Microsoft.EntityFrameworkCore;
+using QueueSmart.Api;
 
 // builder is used to build the application
 var builder = WebApplication.CreateBuilder(args);
 
-// controllers w/ JSON enum serialization as camelCase strings
+// we connecting to the database with this one
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
+// controllers with json enum serialization as camelcase strings
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -17,6 +23,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddOpenApi();
 
+<<<<<<< HEAD
 // PostgreSQL database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -28,8 +35,19 @@ builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddScoped<IUserStore, DbUserStore>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddSingleton<IQueueService, QueueService>();
+=======
+// scoped and singleton services
+builder.Services.AddScoped<IQueueStore, QueueStore>();
+builder.Services.AddScoped<IServiceStore, ServiceStore>();
+builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
+builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddScoped<IQueueService, QueueService>();
+builder.Services.AddScoped<IQueueEntryService, QueueEntryService>();
+>>>>>>> main
 
-// CORS policy
+// cors policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -43,6 +61,7 @@ builder.Services.AddCors(options =>
 // app is the application
 var app = builder.Build();
 
+<<<<<<< HEAD
 // ensure database is created
 using (var scope = app.Services.CreateScope())
 {
@@ -51,12 +70,15 @@ using (var scope = app.Services.CreateScope())
 }
 
 // if the application is in development mode, map the OpenApi
+=======
+// if the application is in development mode, map the openapi
+>>>>>>> main
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-// use the CORS policy
+// use the cors policy
 app.UseCors("AllowFrontend");
 // map the controllers
 app.MapControllers();

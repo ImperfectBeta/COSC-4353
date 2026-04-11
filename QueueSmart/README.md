@@ -1,42 +1,27 @@
-# sv
+# QueueSmart
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+QueueSmart is a web application that allows organizations to manage their services and queues and allows customers to view the services and queues and join them.
 
-## Creating a project
+## Tech Stack
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Svelte 5 & SvelteKit
+- TypeScript
+- Tailwind CSS
+- .NET 10 & C#
 
-```sh
-# create a new project
-npx sv create my-app
-```
+## How to Run
 
-To recreate this project with the same configuration:
+### Frontend
 
-```sh
-# recreate this project
-npx sv create --template minimal --types jsdoc --install npm QueueSmart
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
+```bash
+cd QueueSmart
+npm install
 npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
 ```
 
-## Building
+### Backend
 
-To create a production version of your app:
-
-```sh
-npm run build
+```bash
+cd QueueSmart.Api
+dotnet run
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.

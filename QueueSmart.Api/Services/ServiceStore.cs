@@ -1,95 +1,54 @@
-using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.Models;
 
 namespace QueueSmart.Api.Services;
 
-// WHERE SERVICES ARE STORED !!!!!
+// where services are stored
 
 public interface IServiceStore
 {
-    IEnumerable<Service> GetAll();
-    Service? GetById(Guid id);
-    Service Add(Service service);
-    Service? Update(Guid id, Service service);
-    bool Delete(Guid id);
+    Task<IEnumerable<Service>> GetAllAsync();
+    Task<Service?> GetByIdAsync(Guid id);
+    Task<Service> AddAsync(Service service);
+    Task<Service?> UpdateAsync(Guid id, Service service);
+    Task<bool> DeleteAsync(Guid id);
 }
 
 public class ServiceStore : IServiceStore
 {
-    private readonly ConcurrentDictionary<Guid, Service> _services = new();
+    private readonly AppDbContext _context;
 
-    public ServiceStore()
+    public ServiceStore(AppDbContext context)
     {
-        SeedData();
+        _context = context;
     }
 
-    private void SeedData()
+    public async Task<IEnumerable<Service>> GetAllAsync()
     {
-        var now = DateTime.UtcNow;
-
-        var seeds = new[]
-        {
-            new Service
-            {
-                Id = Guid.NewGuid(),
-                Name = "General Consultation",
-                Description = "Walk-in general medical consultation.",
-                Duration = 15,
-                Priority = PriorityLevel.High,
-                IsOpen = true,
-                QueueLength = 8,
-                CreatedAt = now,
-                UpdatedAt = now
-            },
-            new Service
-            {
-                Id = Guid.NewGuid(),
-                Name = "Document Processing",
-                Description = "Submission and processing of official documents.",
-                Duration = 10,
-                Priority = PriorityLevel.Medium,
-                IsOpen = true,
-                QueueLength = 3,
-                CreatedAt = now,
-                UpdatedAt = now
-            },
-            new Service
-            {
-                Id = Guid.NewGuid(),
-                Name = "Technical Support",
-                Description = "IT and device troubleshooting desk.",
-                Duration = 20,
-                Priority = PriorityLevel.Low,
-                IsOpen = false,
-                QueueLength = 0,
-                CreatedAt = now,
-                UpdatedAt = now
-            }
-        };
-
-        foreach (var service in seeds)
-        {
-            _services.TryAdd(service.Id, service);
-        }
+        return await _context.Services.ToListAsync();
     }
 
-    public IEnumerable<Service> GetAll() => _services.Values.ToList();
+    public async Task<Service?> GetByIdAsync(Guid id)
+    {
+        return await _context.Services.FindAsync(id);
+    }
 
-    public Service? GetById(Guid id) =>
-        _services.TryGetValue(id, out var service) ? service : null;
-
-    public Service Add(Service service)
+    public async Task<Service> AddAsync(Service service)
     {
         service.Id = Guid.NewGuid();
         service.CreatedAt = DateTime.UtcNow;
         service.UpdatedAt = DateTime.UtcNow;
-        _services.TryAdd(service.Id, service);
+
+        _context.Services.Add(service);
+        await _context.SaveChangesAsync();
+
         return service;
     }
 
-    public Service? Update(Guid id, Service updated)
+    public async Task<Service?> UpdateAsync(Guid id, Service updated)
     {
-        if (!_services.TryGetValue(id, out var existing))
+        var existing = await _context.Services.FindAsync(id);
+        if (existing == null)
             return null;
 
         existing.Name = updated.Name;
@@ -98,9 +57,18 @@ public class ServiceStore : IServiceStore
         existing.Priority = updated.Priority;
         existing.UpdatedAt = DateTime.UtcNow;
 
-        _services[id] = existing;
+        await _context.SaveChangesAsync();
         return existing;
     }
 
-    public bool Delete(Guid id) => _services.TryRemove(id, out _);
+    public async Task<bool> DeleteAsync(Guid id)
+    {
+        var service = await _context.Services.FindAsync(id);
+        if (service == null)
+            return false;
+
+        _context.Services.Remove(service);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

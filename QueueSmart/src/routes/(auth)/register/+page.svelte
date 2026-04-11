@@ -1,43 +1,83 @@
 <script lang="ts">
-  import { Eye, EyeOff, ChevronDown } from "@lucide/svelte";
+  import { goto } from "$app/navigation";
+  import { ChevronDown, Eye, EyeOff } from "@lucide/svelte";
+  import { onMount } from "svelte";
+  import { get } from "svelte/store";
 
-  let email: string = '';
-  let role: string = 'user';
-  let password: string = '';
-  let confirmPassword: string = '';
-  let errorMessage: string = '';
-  
+  import {
+  	getAuthDestination,
+  	REGISTER_ROLE_OPTIONS,
+  	registerUser,
+  } from "$lib/api/auth";
+  import { authSession, setAuthSession } from "$lib/stores/auth";
+
+  let name: string = "";
+  let email: string = "";
+  let role: "User" | "ServiceAdmin" = "User";
+  let password: string = "";
+  let confirmPassword: string = "";
+  let errorMessage: string = "";
   let showPassword: boolean = false;
+  let isSubmitting: boolean = false;
 
-  $: isEmailValid = email.includes('@') && email.includes('.');
-  // password must be atleast 8 characters and include a special character
-  $: isPasswordValid = password.length >= 8 && /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  $: isNameValid = name.trim().length > 0;
+  $: isEmailValid = email.includes("@") && email.includes(".");
+  $: isPasswordValid = password.length >= 8;
   $: doPasswordsMatch = password === confirmPassword && password.length > 0;
-  
-  $: isFormValid = isEmailValid && isPasswordValid && doPasswordsMatch;
+  $: isFormValid = isNameValid && isEmailValid && isPasswordValid && doPasswordsMatch;
 
-  function handleRegister(): void {
+  async function handleRegister(): Promise<void> {
+    if (!isNameValid) {
+      errorMessage = "Please provide your name.";
+      return;
+    }
+
     if (!isEmailValid) {
-      errorMessage = 'Please provide a valid email.';
+      errorMessage = "Please provide a valid email.";
       return;
     }
+
     if (!isPasswordValid) {
-      errorMessage = 'Password must be at least 8 characters and include a special character.';
+      errorMessage = "Password must be at least 8 characters.";
       return;
     }
+
     if (!doPasswordsMatch) {
-      errorMessage = 'Passwords do not match.';
+      errorMessage = "Passwords do not match.";
       return;
     }
-    errorMessage = '';
-    
-    const roleName = role === 'admin' ? 'Administrator' : 'Basic User';
-    alert(`you made an account, very cool`);
+
+    isSubmitting = true;
+    errorMessage = "";
+
+    try {
+      const session = await registerUser({
+        name: name.trim(),
+        email: email.trim(),
+        password,
+        role,
+      });
+
+      setAuthSession(session);
+      await goto(getAuthDestination(session.role));
+    } catch (error) {
+      errorMessage = error instanceof Error ? error.message : "Unable to register.";
+    } finally {
+      isSubmitting = false;
+    }
   }
 
-  function togglePassword() {
+  function togglePassword(): void {
     showPassword = !showPassword;
   }
+
+  onMount(() => {
+    const session = get(authSession);
+
+    if (session) {
+      goto(getAuthDestination(session.role));
+    }
+  });
 </script>
 
 <div class="min-h-screen bg-[#3A506B] flex flex-col items-center justify-center p-6 font-['Inter']">
@@ -64,6 +104,19 @@
       {/if}
 
       <form on:submit|preventDefault={handleRegister} class="w-full flex flex-col gap-5">
+
+        <div class="relative w-full">
+          <label for="name" class="absolute -top-3 left-4 bg-[#FFFFFF] px-1 text-[12px] text-[#6C6A6A]">
+            Full Name
+          </label>
+          <input 
+            type="text" 
+            id="name"
+            bind:value={name}
+            class="w-full h-[40px] border border-[#6C6A6A] rounded-[8px] px-4 text-[#3A506B] placeholder:text-[#AFADAD] focus:outline-none focus:border-[#5BC0BE] focus:ring-1 focus:ring-[#5BC0BE] bg-transparent transition-colors"
+            required
+          />
+        </div>
         
         <div class="relative w-full">
           <label for="email" class="absolute -top-3 left-4 bg-[#FFFFFF] px-1 text-[12px] text-[#6C6A6A]">
@@ -87,8 +140,9 @@
             bind:value={role}
             class="w-full h-[40px] border border-[#6C6A6A] rounded-[8px] px-4 text-[#3A506B] focus:outline-none focus:border-[#5BC0BE] focus:ring-1 focus:ring-[#5BC0BE] bg-transparent transition-colors appearance-none cursor-pointer"
           >
-            <option value="user">Basic User</option>
-            <option value="admin">Administrator (Organization)</option>
+            {#each REGISTER_ROLE_OPTIONS as option}
+              <option value={option.value}>{option.label}</option>
+            {/each}
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-[#6C6A6A]">
             <ChevronDown class="h-4 w-4" />
@@ -137,7 +191,7 @@
           </div>
           
           <div class="w-full mt-1 flex flex-col gap-1 pl-1">
-            <span class="text-[10px] text-[#6C6A6A]">* Password must be 8 characters and include a special character.</span>
+            <span class="text-[10px] text-[#6C6A6A]">* Password must be at least 8 characters.</span>
             {#if confirmPassword.length > 0 && password !== confirmPassword}
               <span class="text-[11px] font-bold text-red-500">Passwords must match :/</span>
             {/if}
@@ -146,9 +200,10 @@
 
         <button 
           type="submit"
-          class="mt-2 w-[181px] h-[40px] bg-[#3A506B] hover:bg-[#2c3d52] text-[#FFFFFF] text-[18px] rounded-[8px] mx-auto transition-colors"
+          disabled={isSubmitting}
+          class="mt-2 w-[181px] h-[40px] bg-[#3A506B] hover:bg-[#2c3d52] disabled:opacity-70 disabled:cursor-not-allowed text-[#FFFFFF] text-[18px] rounded-[8px] mx-auto transition-colors"
         >
-          Register
+          {isSubmitting ? "Creating account..." : "Register"}
         </button>
 
       </form>

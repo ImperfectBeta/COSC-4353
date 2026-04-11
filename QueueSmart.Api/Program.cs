@@ -61,6 +61,7 @@ builder.Services.AddCors(options =>
 // app is the application
 var app = builder.Build();
 
+<<<<<<< HEAD
 // ensure database is created
 using (var scope = app.Services.CreateScope())
 {
@@ -69,6 +70,9 @@ using (var scope = app.Services.CreateScope())
 }
 
 // if the application is in development mode, map the OpenApi
+=======
+// if the application is in development mode, map the openapi
+>>>>>>> main
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

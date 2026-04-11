@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Models;
 
@@ -8,131 +6,114 @@ namespace QueueSmart.Api.Services
 {
     public class QueueService : IQueueService
     {
-        private static List<QueueEntry> _queue = new();
-        private static int _nextId = 1;
+        private readonly AppDbContext _context;
         private readonly INotificationService _notificationService;
 
-        private static Dictionary<int, int> _serviceDurations = new()
+        public QueueService(AppDbContext context, INotificationService notificationService)
         {
-            { 1, 10 },
-            { 2, 15 },
-            { 3, 5 }
-        };
-
-        public QueueService(INotificationService notificationService)
-        {
+            _context = context;
             _notificationService = notificationService;
         }
 
-        public QueueEntryResponse JoinQueue(JoinQueueRequest request)
+        public async Task<QueueEntryResponse> JoinQueue(JoinQueueRequest request)
         {
-            bool alreadyInQueue = _queue.Any(e =>
-                e.UserId == request.UserId &&
-                e.ServiceId == request.ServiceId &&
-                e.Status == "waiting");
+            var queue = await _context.Queues.FirstOrDefaultAsync(q => q.ServiceId == request.ServiceId);
+            if (queue == null) throw new Exception("No active queue found for this service.");
 
-            if (alreadyInQueue)
-                throw new InvalidOperationException("User is already in this queue.");
+            var service = await _context.Services.FindAsync(request.ServiceId);
+            int duration = service?.Duration ?? 10;
 
             var entry = new QueueEntry
             {
-                Id = _nextId++,
+                QueueId = queue.Id,
                 UserId = request.UserId,
-                ServiceId = request.ServiceId,
-                JoinedAt = DateTime.UtcNow,
-                Priority = request.Priority,
+                Position = queue.QueueLength + 1,
+                JoinTime = DateTime.UtcNow,
                 Status = "waiting"
             };
 
-            _queue.Add(entry);
+            _context.QueueEntries.Add(entry);
+            queue.QueueLength++;
+            await _context.SaveChangesAsync();
 
-            // Calculate accurate wait time upon joining
-            var orderedQueue = GetOrderedQueue(request.ServiceId);
-            int position = orderedQueue.FindIndex(e => e.Id == entry.Id) + 1;
-            int estimatedWait = CalculateWaitTime(request.ServiceId, position);
+            // Calculate estimated wait
+            int estimatedWait = entry.Position * duration;
 
             // Trigger Notification
-            _notificationService.NotifyUserJoined(request.UserId, request.ServiceId, estimatedWait);
+            await _notificationService.NotifyUserJoined(request.UserId, request.ServiceId, estimatedWait);
 
-            var response = MapToResponse(entry);
-            response.Position = position;
-            response.EstimatedWaitMinutes = estimatedWait;
-            
-            return response;
+            return new QueueEntryResponse
+            {
+                Id = entry.QueueEntryId,
+                UserId = entry.UserId,
+                QueueId = entry.QueueId,
+                Position = entry.Position,
+                JoinTime = entry.JoinTime,
+                Status = entry.Status,
+                EstimatedWaitMinutes = estimatedWait
+            };
         }
 
-        public bool LeaveQueue(int entryId, int userId)
+        public async Task<bool> LeaveQueue(int entryId, int userId)
         {
-            var entry = _queue.FirstOrDefault(e =>
-                e.Id == entryId &&
-                e.UserId == userId &&
-                e.Status == "waiting");
-
+            var entry = await _context.QueueEntries.FirstOrDefaultAsync(e => e.QueueEntryId == entryId && e.UserId == userId);
             if (entry == null) return false;
 
             entry.Status = "cancelled";
+            var queue = await _context.Queues.FindAsync(entry.QueueId);
+            if (queue != null) queue.QueueLength = Math.Max(0, queue.QueueLength - 1);
+
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<QueueEntryResponse> GetQueue(int serviceId)
+        public async Task<List<QueueEntryResponse>> GetQueue(Guid serviceId)
         {
-            var ordered = GetOrderedQueue(serviceId);
-            return ordered.Select((e, index) =>
+            var queue = await _context.Queues.FirstOrDefaultAsync(q => q.ServiceId == serviceId);
+            if (queue == null) return new List<QueueEntryResponse>();
+
+            var entries = await _context.QueueEntries
+                .Where(e => e.QueueId == queue.Id && e.Status == "waiting")
+                .OrderBy(e => e.Position)
+                .ToListAsync();
+
+            return entries.Select(e => new QueueEntryResponse
             {
-                var response = MapToResponse(e);
-                response.Position = index + 1;
-                response.EstimatedWaitMinutes = CalculateWaitTime(serviceId, index + 1);
-                return response;
+                Id = e.QueueEntryId,
+                UserId = e.UserId,
+                Position = e.Position,
+                JoinTime = e.JoinTime,
+                Status = e.Status
             }).ToList();
         }
 
-        public QueueEntryResponse? ServeNext(int serviceId)
+        public async Task<QueueEntryResponse?> ServeNext(Guid serviceId)
         {
-            var orderedQueue = GetOrderedQueue(serviceId);
-            var next = orderedQueue.FirstOrDefault();
-            
+            var queue = await _context.Queues.FirstOrDefaultAsync(q => q.ServiceId == serviceId);
+            if (queue == null) return null;
+
+            var next = await _context.QueueEntries
+                .Where(e => e.QueueId == queue.Id && e.Status == "waiting")
+                .OrderBy(e => e.Position)
+                .FirstOrDefaultAsync();
+
             if (next == null) return null;
 
             next.Status = "serving";
-
-            // Check who is now at the front of the line to notify them
-            var userAlmostReady = orderedQueue.Skip(1).FirstOrDefault();
-            if (userAlmostReady != null)
+            
+            // Notify the user who is now at position 2 that they are almost ready
+            var secondInLine = await _context.QueueEntries
+                .Where(e => e.QueueId == queue.Id && e.Status == "waiting" && e.Position == 2)
+                .FirstOrDefaultAsync();
+            
+            if (secondInLine != null)
             {
-                _notificationService.NotifyUserAlmostReady(userAlmostReady.UserId, serviceId);
+                await _notificationService.NotifyUserAlmostReady(secondInLine.UserId, serviceId);
             }
 
-            return MapToResponse(next);
-        }
+            await _context.SaveChangesAsync();
 
-        private List<QueueEntry> GetOrderedQueue(int serviceId)
-        {
-            return _queue
-                .Where(e => e.ServiceId == serviceId && e.Status == "waiting")
-                .OrderByDescending(e => e.Priority)
-                .ThenBy(e => e.JoinedAt)
-                .ToList();
-        }
-
-        private int CalculateWaitTime(int serviceId, int position)
-        {
-            int duration = _serviceDurations.GetValueOrDefault(serviceId, 10);
-            return position * duration;
-        }
-
-        private QueueEntryResponse MapToResponse(QueueEntry entry)
-        {
-            return new QueueEntryResponse
-            {
-                Id = entry.Id,
-                UserId = entry.UserId,
-                ServiceId = entry.ServiceId,
-                JoinedAt = entry.JoinedAt,
-                Priority = entry.Priority,
-                Status = entry.Status,
-                Position = 0, 
-                EstimatedWaitMinutes = 0 
-            };
+            return new QueueEntryResponse { Id = next.QueueEntryId, UserId = next.UserId };
         }
     }
 }

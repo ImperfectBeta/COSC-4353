@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using QueueSmart.Api.Models;
 
 namespace QueueSmart.Api.Services;
@@ -17,28 +19,46 @@ public class NotificationService : INotificationService
         _context = context;
     }
 
-    public void NotifyUserJoined(int userId, int serviceId, int waitTimeMinutes)
+    public async Task NotifyUserJoined(int userId, Guid serviceId, int waitTimeMinutes)
     {
         string msg = $"User {userId}: You joined the queue for Service {serviceId}. Wait time: {waitTimeMinutes} mins.";
         _logger.LogInformation(msg);
 
-        var notification = new Notification { UserId = userId, Message = msg, Timestamp = DateTime.UtcNow, Status = "sent" };
+        var notification = new Notification 
+        { 
+            UserId = userId, 
+            Message = msg, 
+            Timestamp = DateTime.UtcNow, 
+            Status = "sent" 
+        };
+
         _context.Notifications.Add(notification);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void NotifyUserAlmostReady(int userId, int serviceId)
+    public async Task NotifyUserAlmostReady(int userId, Guid serviceId)
     {
         string msg = $"User {userId}: You are almost ready for Service {serviceId}!";
         _logger.LogInformation(msg);
 
-        var notification = new Notification { UserId = userId, Message = msg, Timestamp = DateTime.UtcNow, Status = "sent" };
+        var notification = new Notification 
+        { 
+            UserId = userId, 
+            Message = msg, 
+            Timestamp = DateTime.UtcNow, 
+            Status = "sent" 
+        };
+
         _context.Notifications.Add(notification);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public List<string> GetUserNotifications(int userId)
+    public async Task<List<string>> GetUserNotifications(int userId)
     {
-        return _context.Notifications.Where(n => n.UserId == userId).OrderByDescending(n => n.Timestamp).Select(n => n.Message).ToList();
+        return await _context.Notifications
+            .Where(n => n.UserId == userId)
+            .OrderByDescending(n => n.Timestamp)
+            .Select(n => n.Message)
+            .ToListAsync();
     }
 }

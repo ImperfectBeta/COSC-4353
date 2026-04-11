@@ -1,13 +1,12 @@
 using QueueSmart.Api.DTOs;
-using QueueSmart.Api.Models;
 
 namespace QueueSmart.Api.Services
 {
     public interface IQueueService
     {
-        QueueEntryResponse JoinQueue(JoinQueueRequest request);
-        bool LeaveQueue(int entryId, int userId);
-        List<QueueEntryResponse> GetQueue(int serviceId);
-        QueueEntryResponse? ServeNext(int serviceId);
+        Task<QueueEntryResponse> JoinQueue(JoinQueueRequest request);
+        Task<bool> LeaveQueue(int entryId, int userId);
+        Task<List<QueueEntryResponse>> GetQueue(Guid serviceId);
+        Task<QueueEntryResponse?> ServeNext(Guid serviceId);
     }
 }

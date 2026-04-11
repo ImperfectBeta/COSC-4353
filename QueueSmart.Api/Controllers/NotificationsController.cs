@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Services;
 
 namespace QueueSmart.Api.Controllers;
@@ -15,7 +16,7 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpGet("{userId}")] // GET /api/notifications/{userId}
-    public ActionResult<IEnumerable<string>> GetNotifications(int userId)
+    public ActionResult<IEnumerable<NotificationResponse>> GetNotifications(int userId)
     {
         var notifications = _notificationService.GetUserNotifications(userId);
         

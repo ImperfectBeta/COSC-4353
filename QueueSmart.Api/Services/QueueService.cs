@@ -11,12 +11,12 @@ namespace QueueSmart.Api.Services
         private static List<QueueEntry> _queue = new();
         private static int _nextId = 1;
         private readonly INotificationService _notificationService;
+        private readonly IUserStore _userStore;
 
-        // Service duration dummy removed for Guid queueId
-
-        public QueueService(INotificationService notificationService)
+        public QueueService(INotificationService notificationService, IUserStore userStore)
         {
             _notificationService = notificationService;
+            _userStore = userStore;
         }
 
         public QueueEntryResponse JoinQueue(JoinQueueRequest request)
@@ -80,6 +80,19 @@ namespace QueueSmart.Api.Services
             }).ToList();
         }
 
+        public List<QueueEntryResponse> GetUserEntries(int userId)
+        {
+            var entries = _queue.Where(e => e.UserId == userId && e.Status == "waiting").ToList();
+            return entries.Select(e =>
+            {
+                var response = MapToResponse(e);
+                var orderedQueue = GetOrderedQueue(e.QueueId);
+                response.Position = orderedQueue.FindIndex(x => x.QueueEntryId == e.QueueEntryId) + 1;
+                response.EstimatedWaitMinutes = CalculateWaitTime(e.QueueId, response.Position);
+                return response;
+            }).ToList();
+        }
+
         public QueueEntryResponse? ServeNext(Guid queueId)
         {
             var orderedQueue = GetOrderedQueue(queueId);
@@ -116,10 +129,12 @@ namespace QueueSmart.Api.Services
 
         private QueueEntryResponse MapToResponse(QueueEntry entry)
         {
+            var user = _userStore.GetById(entry.UserId);
             return new QueueEntryResponse
             {
                 Id = entry.QueueEntryId,
                 UserId = entry.UserId,
+                UserName = user?.Name ?? "Unknown User",
                 QueueId = entry.QueueId,
                 JoinTime = entry.JoinTime,
                 Status = entry.Status,

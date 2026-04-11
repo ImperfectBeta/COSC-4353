@@ -28,6 +28,7 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IUserStore, DbUserStore>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IQueueService, QueueService>();
+builder.Services.AddScoped<IQueueStore, QueueStore>();
 
 // cors policy
 builder.Services.AddCors(options =>
@@ -48,6 +49,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     db.Database.EnsureCreated();
+    DbSeeder.Seed(db);
 }
 
 // if the application is in development mode, map the OpenApi

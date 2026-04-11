@@ -10,6 +10,7 @@ public interface IUserStore
     User? GetById(int id);
     IEnumerable<User> GetAll();
     User Add(User user);
+    void UpdateUser(User user);
     bool EmailExists(string email);
 }
 
@@ -59,6 +60,16 @@ public class DbUserStore : IUserStore
 
     public bool EmailExists(string email) =>
         _db.UserCredentials.Any(c => c.Email == email.ToLowerInvariant());
+
+    public void UpdateUser(User user)
+    {
+        var credential = _db.UserCredentials.Include(c => c.Profile).FirstOrDefault(c => c.Id == user.Id);
+        if (credential != null && credential.Profile != null)
+        {
+            credential.Profile.FullName = user.Name;
+            _db.SaveChanges();
+        }
+    }
 }
 
 internal static class UserCredentialExtensions
@@ -99,4 +110,13 @@ public class InMemoryUserStore : IUserStore
 
     public bool EmailExists(string email) =>
         _users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+    public void UpdateUser(User user)
+    {
+        var existing = _users.FirstOrDefault(u => u.Id == user.Id);
+        if (existing != null)
+        {
+            existing.Name = user.Name;
+        }
+    }
 }

@@ -23,6 +23,11 @@ public class AuthResponse
     public string Token { get; set; } = string.Empty;
 }
 
+public class UpdateProfileRequest
+{
+    public string Name { get; set; } = string.Empty;
+}
+
 public class UserResponse
 {
     public int Id { get; set; }

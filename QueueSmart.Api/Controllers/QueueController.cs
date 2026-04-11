@@ -57,6 +57,16 @@ namespace QueueSmart.Api.Controllers
             return Ok(queue);
         }
 
+        [HttpGet("user/{userId:int}")]
+        public IActionResult GetUserEntries(int userId)
+        {
+            if (userId <= 0)
+                return BadRequest("UserId is required.");
+
+            var entries = _queueService.GetUserEntries(userId);
+            return Ok(entries);
+        }
+
         [HttpPost("serve-next/{queueId}")]
         public IActionResult ServeNext(Guid queueId)
         {

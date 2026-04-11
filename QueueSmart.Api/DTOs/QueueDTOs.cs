@@ -10,6 +10,7 @@ namespace QueueSmart.Api.DTOs
     {
         public int Id { get; set; }
         public int UserId { get; set; }
+        public string UserName { get; set; } = string.Empty;
         public Guid QueueId { get; set; }
         public DateTime JoinTime { get; set; }
         public string Status { get; set; } = string.Empty;

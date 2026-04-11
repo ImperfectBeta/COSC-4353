@@ -50,6 +50,7 @@ public class UpdateServiceRequest
 public class ServiceResponse
 {
     public Guid Id { get; set; }
+    public Guid? ActiveQueueId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int Duration { get; set; }
@@ -59,15 +60,16 @@ public class ServiceResponse
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public static ServiceResponse FromService(Service service, Queue? activeQueue = null) => new()
+    public static ServiceResponse FromService(Service service, Queue? activeQueue, int queueLength) => new()
     {
         Id = service.Id,
+        ActiveQueueId = activeQueue?.Id,
         Name = service.Name,
         Description = service.Description,
         Duration = service.Duration,
         Priority = service.Priority.ToString().ToLower(),
         IsOpen = activeQueue != null && activeQueue.Status == "open",
-        QueueLength = activeQueue?.QueueLength ?? 0,
+        QueueLength = queueLength,
         CreatedAt = service.CreatedAt,
         UpdatedAt = service.UpdatedAt
     };

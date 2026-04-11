@@ -65,4 +65,17 @@ public class AuthController : ControllerBase
         var users = _userStore.GetAll().Select(UserResponse.FromUser);
         return Ok(users);
     }
+
+    // PUT /api/auth/profile/{id}
+    [HttpPut("profile/{id:int}")]
+    public ActionResult<UserResponse> UpdateProfile(int id, [FromBody] UpdateProfileRequest request)
+    {
+        var user = _userStore.GetById(id);
+        if (user == null) return NotFound(new { message = "User not found" });
+
+        user.Name = request.Name;
+        _userStore.UpdateUser(user);
+
+        return Ok(UserResponse.FromUser(user));
+    }
 }

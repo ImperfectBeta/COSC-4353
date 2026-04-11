@@ -18,7 +18,7 @@ public class HistoryController : ControllerBase
         _serviceStore = serviceStore;
     }
 
-    [HttpGet] // GET /api/history
+    [HttpGet] // get /api/history
     public ActionResult<IEnumerable<ServiceHistoryEntry>> GetAll([FromQuery] Guid? serviceId)
     {
         var entries = serviceId.HasValue
@@ -28,10 +28,10 @@ public class HistoryController : ControllerBase
         return Ok(entries);
     }
 
-    [HttpGet("statistics")] // GET /api/history/statistics
-    public ActionResult<ServiceStatisticsResponse> GetStatistics()
+    [HttpGet("statistics")] // get /api/history/statistics
+    public async Task<ActionResult<ServiceStatisticsResponse>> GetStatistics()
     {
-        var stats = _historyStore.GetStatistics(_serviceStore);
+        var stats = await _historyStore.GetStatisticsAsync(_serviceStore);
         return Ok(stats);
     }
 }

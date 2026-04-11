@@ -13,36 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("QueueSmart.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad762467c22183bd480ee0902983b51cf5b7bc64")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8120af3ad768f2983b74f1a8f30a4fbe9aaa311c")]
->>>>>>> 35b2e5a (database set uppy)
-=======
-=======
->>>>>>> 2e87969 (AssemblyInfo)
-=======
->>>>>>> e019513 (U6zUQ7OuittDu1k0WHqRFfdXQijgjKfF6ZwAikvmKD6OQjmKWUcDigkztm5FZN05nMON9ZcoinlBmTNnAUdBnRbUUbgdBZwWbkcBpwXcVsBtxfjb31j1QB5qeebOAAAAAElFTkSuQmCC)
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8120af3ad768f2983b74f1a8f30a4fbe9aaa311c")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cca30b9c7ccd2bff594fbde12ce4723485bb004f")]
->>>>>>> 02abc71 (test build)
-<<<<<<< HEAD
->>>>>>> e6b8c9c (test build)
-=======
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9eb2e08b6f6df039a980b8375138688084f18c0f")]
->>>>>>> 899b5b0 (AssemblyInfo)
-<<<<<<< HEAD
->>>>>>> 2e87969 (AssemblyInfo)
-=======
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad762467c22183bd480ee0902983b51cf5b7bc64")]
->>>>>>> 6425015 (U6zUQ7OuittDu1k0WHqRFfdXQijgjKfF6ZwAikvmKD6OQjmKWUcDigkztm5FZN05nMON9ZcoinlBmTNnAUdBnRbUUbgdBZwWbkcBpwXcVsBtxfjb31j1QB5qeebOAAAAAElFTkSuQmCC)
->>>>>>> e019513 (U6zUQ7OuittDu1k0WHqRFfdXQijgjKfF6ZwAikvmKD6OQjmKWUcDigkztm5FZN05nMON9ZcoinlBmTNnAUdBnRbUUbgdBZwWbkcBpwXcVsBtxfjb31j1QB5qeebOAAAAAElFTkSuQmCC)
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85be9971161dc4577cc1c1a3ed852212328ceddb")]
 [assembly: System.Reflection.AssemblyProductAttribute("QueueSmart.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("QueueSmart.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

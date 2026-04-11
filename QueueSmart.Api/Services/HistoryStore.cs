@@ -4,14 +4,14 @@ using QueueSmart.Api.Models;
 
 namespace QueueSmart.Api.Services;
 
-// WHERE SERVICE HISTORY IS STORED
+// where service history is stored
 
 public interface IHistoryStore
 {
     void Record(ServiceHistoryEntry entry);
     IEnumerable<ServiceHistoryEntry> GetAll();
     IEnumerable<ServiceHistoryEntry> GetByServiceId(Guid serviceId);
-    ServiceStatisticsResponse GetStatistics(IServiceStore serviceStore);
+    Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore);
 }
 
 public class HistoryStore : IHistoryStore
@@ -33,12 +33,12 @@ public class HistoryStore : IHistoryStore
                 .OrderByDescending(e => e.Timestamp)
                 .ToList();
 
-    public ServiceStatisticsResponse GetStatistics(IServiceStore serviceStore)
+    public async Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore)
     {
-        var allServices = serviceStore.GetAll().ToList();
+        var allServices = await serviceStore.GetAllAsync();
         return new ServiceStatisticsResponse
         {
-            TotalServices = allServices.Count,
+            TotalServices = allServices.Count(),
             ActiveServices = allServices.Count(s => s.IsOpen),
             TotalHistoryEntries = _entries.Count,
             RecentHistory = _entries.OrderByDescending(e => e.Timestamp).Take(20).ToList()

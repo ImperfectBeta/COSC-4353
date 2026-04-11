@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     
-// controllers w/ JSON enum serialization as camelCase strings
+// controllers with json enum serialization as camelcase strings
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
@@ -21,15 +21,15 @@ builder.Services.AddControllers()
 
 builder.Services.AddOpenApi();
 
-// in-memory stores as singletons (a singleton is a class that can only have one instance)
-builder.Services.AddSingleton<IServiceStore, ServiceStore>();
+// scoped and singleton services
+builder.Services.AddScoped<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();
 builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IQueueService, QueueService>();
 
-// CORS policy
+// cors policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -43,13 +43,13 @@ builder.Services.AddCors(options =>
 // app is the application
 var app = builder.Build();
 
-// if the application is in development mode, map the OpenApi
+// if the application is in development mode, map the openapi
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
-// use the CORS policy
+// use the cors policy
 app.UseCors("AllowFrontend");
 // map the controllers
 app.MapControllers();

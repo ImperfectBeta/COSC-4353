@@ -5,7 +5,7 @@ using QueueSmart.Api.Services;
 
 namespace QueueSmart.Api.Controllers;
 
-// CONTROLLER FOR SERVICES
+// controller for services
 
 [ApiController]
 [Route("api/[controller]")] // base route is /api/services
@@ -20,26 +20,26 @@ public class ServicesController : ControllerBase
         _historyStore = historyStore;
     }
 
-    [HttpGet] // GET /api/services
-    public ActionResult<IEnumerable<ServiceResponse>> GetAll()
+    [HttpGet] // get /api/services
+    public async Task<ActionResult<IEnumerable<ServiceResponse>>> GetAll()
     {
-        var services = _serviceStore.GetAll()
-            .Select(ServiceResponse.FromService);
-        return Ok(services);
+        var services = await _serviceStore.GetAllAsync();
+        var response = services.Select(ServiceResponse.FromService);
+        return Ok(response);
     }
 
-    [HttpGet("{id:guid}")] // GET /api/services/{id}
-    public ActionResult<ServiceResponse> GetById(Guid id)
+    [HttpGet("{id:guid}")] // get /api/services/{id}
+    public async Task<ActionResult<ServiceResponse>> GetById(Guid id)
     {
-        var service = _serviceStore.GetById(id);
+        var service = await _serviceStore.GetByIdAsync(id);
         if (service == null)
             return NotFound();
 
         return Ok(ServiceResponse.FromService(service));
     }
 
-    [HttpPost] // POST /api/services
-    public ActionResult<ServiceResponse> Create([FromBody] CreateServiceRequest request)
+    [HttpPost] // post /api/services
+    public async Task<ActionResult<ServiceResponse>> Create([FromBody] CreateServiceRequest request)
     {
         var service = new Service
         {
@@ -49,7 +49,7 @@ public class ServicesController : ControllerBase
             Priority = request.Priority
         };
 
-        var created = _serviceStore.Add(service);
+        var created = await _serviceStore.AddAsync(service);
 
         _historyStore.Record(new ServiceHistoryEntry
         {
@@ -63,8 +63,8 @@ public class ServicesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, response);
     }
 
-    [HttpPut("{id:guid}")] // PUT /api/services/{id}
-    public ActionResult<ServiceResponse> Update(Guid id, [FromBody] UpdateServiceRequest request)
+    [HttpPut("{id:guid}")] // put /api/services/{id}
+    public async Task<ActionResult<ServiceResponse>> Update(Guid id, [FromBody] UpdateServiceRequest request)
     {
         var updated = new Service
         {
@@ -74,7 +74,7 @@ public class ServicesController : ControllerBase
             Priority = request.Priority
         };
 
-        var result = _serviceStore.Update(id, updated);
+        var result = await _serviceStore.UpdateAsync(id, updated);
         if (result == null)
             return NotFound();
 
@@ -89,14 +89,14 @@ public class ServicesController : ControllerBase
         return Ok(ServiceResponse.FromService(result));
     }
 
-    [HttpDelete("{id:guid}")] // DELETE /api/services/{id}
-    public IActionResult Delete(Guid id)
+    [HttpDelete("{id:guid}")] // delete /api/services/{id}
+    public async Task<IActionResult> Delete(Guid id)
     {
-        var service = _serviceStore.GetById(id);
+        var service = await _serviceStore.GetByIdAsync(id);
         if (service == null)
             return NotFound();
 
-        _serviceStore.Delete(id);
+        await _serviceStore.DeleteAsync(id);
 
         _historyStore.Record(new ServiceHistoryEntry
         {

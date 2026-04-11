@@ -12,7 +12,7 @@ using QueueSmart.Api;
 namespace QueueSmart.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260411015926_AddNotificationTable")]
+    [Migration("20260411022033_AddNotificationTable")]
     partial class AddNotificationTable
     {
         /// <inheritdoc />

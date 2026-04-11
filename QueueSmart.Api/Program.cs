@@ -1,30 +1,33 @@
 using System.Text.Json.Serialization;
-using QueueSmart.Api.Services;
 using Microsoft.EntityFrameworkCore;
-using QueueSmart.Api;
+using QueueSmart.Api.Data;
+using QueueSmart.Api.Services;
 
 // builder is used to build the application
 var builder = WebApplication.CreateBuilder(args);
 
-// we connecting to the database with this one
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-    
 // controllers w/ JSON enum serialization as camelCase strings
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.Converters.Add(
             new JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
     });
 
 builder.Services.AddOpenApi();
 
+// PostgreSQL database
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // in-memory stores as singletons (a singleton is a class that can only have one instance)
 builder.Services.AddSingleton<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
-builder.Services.AddSingleton<IUserStore, InMemoryUserStore>();
-builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
+builder.Services.AddScoped<IUserStore, DbUserStore>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IQueueService, QueueService>();
 
 // CORS policy
 builder.Services.AddCors(options =>
@@ -39,6 +42,13 @@ builder.Services.AddCors(options =>
 
 // app is the application
 var app = builder.Build();
+
+// ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated();
+}
 
 // if the application is in development mode, map the OpenApi
 if (app.Environment.IsDevelopment())

@@ -146,7 +146,6 @@ namespace QueueSmart.Api.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
-                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

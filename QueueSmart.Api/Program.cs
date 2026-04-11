@@ -22,6 +22,7 @@ builder.Services.AddControllers()
 builder.Services.AddOpenApi();
 
 // scoped and singleton services
+builder.Services.AddScoped<IQueueStore, QueueStore>();
 builder.Services.AddScoped<IServiceStore, ServiceStore>();
 builder.Services.AddSingleton<IHistoryStore, HistoryStore>();
 builder.Services.AddSingleton<INotificationService, NotificationService>();

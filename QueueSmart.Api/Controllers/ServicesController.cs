@@ -13,18 +13,24 @@ public class ServicesController : ControllerBase
 {
     private readonly IServiceStore _serviceStore;
     private readonly IHistoryStore _historyStore;
+    private readonly IQueueStore _queueStore;
 
-    public ServicesController(IServiceStore serviceStore, IHistoryStore historyStore)
+    public ServicesController(IServiceStore serviceStore, IHistoryStore historyStore, IQueueStore queueStore)
     {
         _serviceStore = serviceStore;
         _historyStore = historyStore;
+        _queueStore = queueStore;
     }
 
     [HttpGet] // get /api/services
     public async Task<ActionResult<IEnumerable<ServiceResponse>>> GetAll()
     {
         var services = await _serviceStore.GetAllAsync();
-        var response = services.Select(ServiceResponse.FromService);
+        var activeQueues = await _queueStore.GetActiveQueuesAsync();
+        
+        var response = services.Select(s => 
+            ServiceResponse.FromService(s, activeQueues.FirstOrDefault(q => q.ServiceId == s.Id))
+        );
         return Ok(response);
     }
 
@@ -35,7 +41,8 @@ public class ServicesController : ControllerBase
         if (service == null)
             return NotFound();
 
-        return Ok(ServiceResponse.FromService(service));
+        var activeQueue = await _queueStore.GetActiveQueueForServiceAsync(id);
+        return Ok(ServiceResponse.FromService(service, activeQueue));
     }
 
     [HttpPost] // post /api/services
@@ -59,7 +66,7 @@ public class ServicesController : ControllerBase
             Details = $"Service '{created.Name}' created with {created.Priority} priority and {created.Duration} min duration."
         });
 
-        var response = ServiceResponse.FromService(created);
+        var response = ServiceResponse.FromService(created, null);
         return CreatedAtAction(nameof(GetById), new { id = created.Id }, response);
     }
 
@@ -86,7 +93,8 @@ public class ServicesController : ControllerBase
             Details = $"Service '{result.Name}' updated."
         });
 
-        return Ok(ServiceResponse.FromService(result));
+        var activeQueue = await _queueStore.GetActiveQueueForServiceAsync(id);
+        return Ok(ServiceResponse.FromService(result, activeQueue));
     }
 
     [HttpDelete("{id:guid}")] // delete /api/services/{id}
@@ -95,6 +103,11 @@ public class ServicesController : ControllerBase
         var service = await _serviceStore.GetByIdAsync(id);
         if (service == null)
             return NotFound();
+
+        // optionally close queues if we're deleting the service
+        var activeQueue = await _queueStore.GetActiveQueueForServiceAsync(id);
+        if (activeQueue != null)
+            await _queueStore.CloseQueueAsync(activeQueue.Id);
 
         await _serviceStore.DeleteAsync(id);
 

@@ -11,7 +11,7 @@ public interface IHistoryStore
     void Record(ServiceHistoryEntry entry);
     IEnumerable<ServiceHistoryEntry> GetAll();
     IEnumerable<ServiceHistoryEntry> GetByServiceId(Guid serviceId);
-    Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore);
+    Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore);
 }
 
 public class HistoryStore : IHistoryStore
@@ -33,13 +33,15 @@ public class HistoryStore : IHistoryStore
                 .OrderByDescending(e => e.Timestamp)
                 .ToList();
 
-    public async Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore)
+    public async Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore)
     {
         var allServices = await serviceStore.GetAllAsync();
+        var activeQueues = await queueStore.GetActiveQueuesAsync();
+
         return new ServiceStatisticsResponse
         {
             TotalServices = allServices.Count(),
-            ActiveServices = allServices.Count(s => s.IsOpen),
+            ActiveServices = activeQueues.Count(),
             TotalHistoryEntries = _entries.Count,
             RecentHistory = _entries.OrderByDescending(e => e.Timestamp).Take(20).ToList()
         };

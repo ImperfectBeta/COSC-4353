@@ -48,10 +48,6 @@
 <div class="space-y-8">
 	<section>
 		<h1 class="text-3xl font-bold tracking-tight">Notifications</h1>
-		<p class="text-foreground/70 mt-2">
-			This is some example text. What's good broh? How's it goin broh? I
-			hope you're havin a good one broh.
-		</p>
 	</section>
 
 	{#if notificationStore.notifications.length === 0}

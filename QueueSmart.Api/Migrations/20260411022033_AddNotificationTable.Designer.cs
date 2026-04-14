@@ -192,7 +192,7 @@ namespace QueueSmart.Api.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("UserCredentials");
                 });
 
             modelBuilder.Entity("QueueSmart.Api.Models.Notification", b =>

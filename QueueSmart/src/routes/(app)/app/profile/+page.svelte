@@ -1,103 +1,40 @@
 <script lang="ts">
-	import type { PageData } from "./$types";
-	import QueueCard from "$lib/components/queue-card.svelte";
-	import Search from "@lucide/svelte/icons/search";
-	import TicketModal from "$lib/components/ticket-modal.svelte";
-	import type { Queue, QueueEntry } from "$lib/types";
-
-	let { data }: { data: PageData } = $props();
-
-	let searchQuery = $state("");
-	let selectedEntry = $state<(QueueEntry & { queue: Queue }) | null>(null);
-	let ticketModalOpen = $state(false);
-
-	let filteredQueues = $derived(
-		data.suggestedQueues.filter(
-			q =>
-				q.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				q.organization
-					.toLowerCase()
-					.includes(searchQuery.toLowerCase()),
-		),
-	);
+    import { authSession } from "$lib/stores/auth";
+    import { CircleUser } from "@lucide/svelte";
 </script>
 
-<div class="space-y-8 pb-12">
-	<section>
-		<h1 class="text-3xl font-bold tracking-tight">
-			Welcome back, {data.user.name}
-		</h1>
-		<p class="text-foreground/70 mt-2">
-			Here is what's happening with your queues today.
-		</p>
-	</section>
+<div class="max-w-2xl mx-auto py-8">
+    <div class="bg-white rounded-[16px] shadow-sm border border-gray-200 overflow-hidden">
+        
+        <div class="bg-[#1C2541] px-8 py-6 flex items-center gap-6">
+            <div class="bg-[#5BC0BE] p-4 rounded-full">
+                <CircleUser class="w-12 h-12 text-[#1C2541]" />
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-white capitalize">
+                    {$authSession?.email?.split('@')[0] || "My Profile"}
+                </h1>
+                <p class="text-[#5BC0BE]">
+                    {$authSession?.email || "No email found"}
+                </p>
+            </div>
+        </div>
 
-	<section class="space-y-4">
-		<h2 class="text-xl font-semibold tracking-tight">Active Queues</h2>
-		{#if data.activeQueues.length === 0}
-			<div
-				class="rounded-lg border border-dashed p-8 text-center text-muted-foreground"
-			>
-				You are not currently in any queues.
-			</div>
-		{:else}
-			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{#each data.activeQueues as entry}
-					<QueueCard
-						queue={entry.queue}
-						{entry}
-						section="active"
-						onviewticket={() => {
-							selectedEntry = entry;
-							ticketModalOpen = true;
-						}}
-					/>
-				{/each}
-			</div>
-		{/if}
-	</section>
-
-	<section class="space-y-4">
-		<div
-			class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-		>
-			<h2 class="text-xl font-semibold tracking-tight">
-				Discover Queues
-			</h2>
-
-			<div class="relative w-full max-w-sm group">
-				<div
-					class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
-				>
-					<Search
-						class="h-4 w-4 text-muted/70 group-hover:text-muted group-focus-within:text-muted"
-					/>
-				</div>
-				<input
-					type="search"
-					placeholder="Find a queue"
-					bind:value={searchQuery}
-					class="w-full bg-accent/25 border rounded-lg pl-9 py-2.5 text-sm text-foreground
-                   placeholder:text-foreground/70! outline-none transition-colors
-                   focus:border-primary"
-				/>
-			</div>
-		</div>
-
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each filteredQueues as queue}
-				<QueueCard
-					{queue}
-					onviewticket={() => (ticketModalOpen = true)}
-				/>
-			{/each}
-		</div>
-	</section>
+        <div class="p-8 space-y-6">
+            <div>
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Account Role</h3>
+                <p class="text-lg text-[#3A506B] capitalize">{$authSession?.role || "User"}</p>
+            </div>
+            
+            <hr class="border-gray-100" />
+            
+            <div>
+                <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Account Status</h3>
+                <span class="inline-flex items-center px-4 py-1 rounded-full text-sm font-bold bg-[#5BC0BE]/20 text-[#1C2541]">
+                    Active
+                </span>
+            </div>
+        </div>
+        
+    </div>
 </div>
-
-<TicketModal
-	open={ticketModalOpen}
-	queue={selectedEntry?.queue}
-	entry={selectedEntry ?? undefined}
-	onclose={() => (ticketModalOpen = false)}
-/>

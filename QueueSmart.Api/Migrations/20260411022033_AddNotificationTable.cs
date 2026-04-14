@@ -17,19 +17,19 @@ namespace QueueSmart.Api.Migrations
                 columns: table => new
                 {
                     NotificationId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Message = table.Column<string>(type: "text", nullable: false),
                     Timestamp = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<string>(type: "text", nullable: false)
                 },
-                constraints: table =>
+            constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.NotificationId);
                     table.ForeignKey(
-                        name: "FK_Notifications_Users_UserId",
+                        name: "FK_Notifications_UserCredentials_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
+                        principalTable: "UserCredentials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });

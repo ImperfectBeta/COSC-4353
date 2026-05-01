@@ -18,6 +18,7 @@ public class Service
     public string Description { get; set; } = string.Empty;
     public int Duration { get; set; }
     public PriorityLevel Priority { get; set; } = PriorityLevel.Medium;
+    public int AdminId { get; set; } 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 }

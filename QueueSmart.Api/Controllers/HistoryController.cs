@@ -20,20 +20,32 @@ public class HistoryController : ControllerBase
         _queueStore = queueStore;
     }
 
-    [HttpGet] // get /api/history
-    public ActionResult<IEnumerable<ServiceHistoryEntry>> GetAll([FromQuery] Guid? serviceId)
+    [HttpGet] 
+    public async Task<ActionResult<IEnumerable<ServiceHistoryEntry>>> GetAll([FromQuery] Guid? serviceId)
     {
         var entries = serviceId.HasValue
-            ? _historyStore.GetByServiceId(serviceId.Value)
-            : _historyStore.GetAll();
+            ? await _historyStore.GetByServiceIdAsync(serviceId.Value)
+            : await _historyStore.GetAllAsync();
 
         return Ok(entries);
     }
 
-    [HttpGet("statistics")] // get /api/history/statistics
+    [HttpGet("statistics")] 
     public async Task<ActionResult<ServiceStatisticsResponse>> GetStatistics()
     {
-        var stats = await _historyStore.GetStatisticsAsync(_serviceStore, _queueStore);
+        var adminId = GetCurrentAdminId();
+        if (adminId == null) return Unauthorized("Missing User ID header.");
+
+        var stats = await _historyStore.GetStatisticsAsync(_serviceStore, _queueStore, adminId.Value);
         return Ok(stats);
+    }
+
+    private int? GetCurrentAdminId()
+    {
+        if (Request.Headers.TryGetValue("X-User-Id", out var userIdStr) && int.TryParse(userIdStr, out int adminId))
+        {
+            return adminId;
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Models;
 
@@ -8,42 +8,56 @@ namespace QueueSmart.Api.Services;
 
 public interface IHistoryStore
 {
-    void Record(ServiceHistoryEntry entry);
-    IEnumerable<ServiceHistoryEntry> GetAll();
-    IEnumerable<ServiceHistoryEntry> GetByServiceId(Guid serviceId);
-    Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore);
+    Task RecordAsync(ServiceHistoryEntry entry);
+    Task<IEnumerable<ServiceHistoryEntry>> GetAllAsync();
+    Task<IEnumerable<ServiceHistoryEntry>> GetByServiceIdAsync(Guid serviceId);
+    Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore, int adminId);
 }
 
 public class HistoryStore : IHistoryStore
 {
-    private readonly ConcurrentBag<ServiceHistoryEntry> _entries = new();
+    private readonly AppDbContext _context;
 
-    public void Record(ServiceHistoryEntry entry)
+    public HistoryStore(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task RecordAsync(ServiceHistoryEntry entry)
     {
         entry.Id = Guid.NewGuid();
         entry.Timestamp = DateTime.UtcNow;
-        _entries.Add(entry);
+        _context.HistoryEntries.Add(entry);
+        await _context.SaveChangesAsync();
     }
 
-    public IEnumerable<ServiceHistoryEntry> GetAll() =>
-        _entries.OrderByDescending(e => e.Timestamp).ToList();
+    public async Task<IEnumerable<ServiceHistoryEntry>> GetAllAsync() =>
+        await _context.HistoryEntries.OrderByDescending(e => e.Timestamp).ToListAsync();
 
-    public IEnumerable<ServiceHistoryEntry> GetByServiceId(Guid serviceId) =>
-        _entries.Where(e => e.ServiceId == serviceId)
-                .OrderByDescending(e => e.Timestamp)
-                .ToList();
+    public async Task<IEnumerable<ServiceHistoryEntry>> GetByServiceIdAsync(Guid serviceId) =>
+        await _context.HistoryEntries
+            .Where(e => e.ServiceId == serviceId)
+            .OrderByDescending(e => e.Timestamp)
+            .ToListAsync();
 
-    public async Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore)
+    public async Task<ServiceStatisticsResponse> GetStatisticsAsync(IServiceStore serviceStore, IQueueStore queueStore, int adminId)
     {
-        var allServices = await serviceStore.GetAllAsync();
+        var adminServices = await serviceStore.GetByAdminIdAsync(adminId);
+        var adminServiceIds = adminServices.Select(s => s.Id).ToHashSet();
+
         var activeQueues = await queueStore.GetActiveQueuesAsync();
+        var adminActiveQueues = activeQueues.Where(q => adminServiceIds.Contains(q.ServiceId));
+
+        var adminHistory = await _context.HistoryEntries
+            .Where(e => adminServiceIds.Contains(e.ServiceId))
+            .ToListAsync();
 
         return new ServiceStatisticsResponse
         {
-            TotalServices = allServices.Count(),
-            ActiveServices = activeQueues.Count(),
-            TotalHistoryEntries = _entries.Count,
-            RecentHistory = _entries.OrderByDescending(e => e.Timestamp).Take(20).ToList()
+            TotalServices = adminServices.Count(),
+            ActiveServices = adminActiveQueues.Count(),
+            TotalHistoryEntries = adminHistory.Count,
+            RecentHistory = adminHistory.OrderByDescending(e => e.Timestamp).Take(20).ToList()
         };
     }
 }

@@ -10,5 +10,7 @@ namespace QueueSmart.Api.Services
         List<QueueEntryResponse> GetQueue(Guid queueId);
         List<QueueEntryResponse> GetUserEntries(int userId);
         QueueEntryResponse? ServeNext(Guid queueId);
+        
+        void ReorderQueue(Guid queueId, List<int> orderedEntryIds);
     }
 }

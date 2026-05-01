@@ -8,6 +8,7 @@ namespace QueueSmart.Api.Services;
 public interface IServiceStore
 {
     Task<IEnumerable<Service>> GetAllAsync();
+    Task<IEnumerable<Service>> GetByAdminIdAsync(int adminId); 
     Task<Service?> GetByIdAsync(Guid id);
     Task<Service> AddAsync(Service service);
     Task<Service?> UpdateAsync(Guid id, Service service);
@@ -26,6 +27,13 @@ public class ServiceStore : IServiceStore
     public async Task<IEnumerable<Service>> GetAllAsync()
     {
         return await _context.Services.ToListAsync();
+    }
+
+    public async Task<IEnumerable<Service>> GetByAdminIdAsync(int adminId)
+    {
+        return await _context.Services
+            .Where(s => s.AdminId == adminId)
+            .ToListAsync();
     }
 
     public async Task<Service?> GetByIdAsync(Guid id)
@@ -55,6 +63,7 @@ public class ServiceStore : IServiceStore
         existing.Description = updated.Description;
         existing.Duration = updated.Duration;
         existing.Priority = updated.Priority;
+        existing.AdminId = updated.AdminId;
         existing.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync();

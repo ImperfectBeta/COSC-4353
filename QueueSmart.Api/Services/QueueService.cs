@@ -40,7 +40,7 @@ namespace QueueSmart.Api.Services
 
             _context.QueueEntries.Add(entry);
             _context.SaveChanges(); 
-
+            
             // Calculate accurate wait time upon joining
             var orderedQueue = GetOrderedQueue(request.QueueId);
             int position = orderedQueue.FindIndex(e => e.QueueEntryId == entry.QueueEntryId) + 1;
@@ -117,6 +117,26 @@ namespace QueueSmart.Api.Services
             }
 
             return MapToResponse(next);
+        }
+
+        public void ReorderQueue(Guid queueId, List<int> orderedEntryIds)
+        {
+            var entries = _context.QueueEntries
+                .Where(e => e.QueueId == queueId && e.Status == "waiting")
+                .ToList();
+
+            var now = DateTime.UtcNow;
+            
+            for (int i = 0; i < orderedEntryIds.Count; i++)
+            {
+                var entry = entries.FirstOrDefault(e => e.QueueEntryId == orderedEntryIds[i]);
+                if (entry != null)
+                {
+                    entry.JoinTime = now.AddSeconds(i); 
+                }
+            }
+
+            _context.SaveChanges();
         }
 
         private List<QueueEntry> GetOrderedQueue(Guid queueId)

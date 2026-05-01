@@ -1,6 +1,4 @@
-using System.Data;
-using System.Runtime.Versioning;
-using System.Security.Cryptography.X509Certificates;
+using System;
 using Microsoft.AspNetCore.Mvc;
 using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Services;
@@ -21,10 +19,8 @@ namespace QueueSmart.Api.Controllers
         [HttpPost("join")]
         public IActionResult JoinQueue([FromBody] JoinQueueRequest request)
         {
-            if (request.UserId <= 0)
-                return BadRequest("UserId is required.");
-            if (request.QueueId == Guid.Empty)
-                return BadRequest("QueueId is required.");
+            if (request.UserId <= 0) return BadRequest("UserId is required.");
+            if (request.QueueId == Guid.Empty) return BadRequest("QueueId is required.");
 
             try
             {
@@ -40,9 +36,7 @@ namespace QueueSmart.Api.Controllers
         [HttpDelete("leave/{entryId}")]
         public IActionResult LeaveQueue(int entryId, [FromQuery] int userId)
         {
-            if (userId <= 0)
-                return BadRequest("UserId is required.");
-
+            if (userId <= 0) return BadRequest("UserId is required.");
             bool success = _queueService.LeaveQueue(entryId, userId);
             return success ? Ok("Removed from queue.") : NotFound("Queue entry not found.");
         }
@@ -50,19 +44,15 @@ namespace QueueSmart.Api.Controllers
         [HttpGet("{queueId}")]
         public IActionResult GetQueue(Guid queueId)
         {
-            if (queueId == Guid.Empty)
-                return BadRequest("QueueId is required.");
-
-            var queue = _queueService.GetQueue(queueId);
-            return Ok(queue);
+            if (queueId == Guid.Empty) return BadRequest("QueueId is required.");
+            var entries = _queueService.GetQueue(queueId);
+            return Ok(new { entries = entries });
         }
 
         [HttpGet("user/{userId:int}")]
         public IActionResult GetUserEntries(int userId)
         {
-            if (userId <= 0)
-                return BadRequest("UserId is required.");
-
+            if (userId <= 0) return BadRequest("UserId is required.");
             var entries = _queueService.GetUserEntries(userId);
             return Ok(entries);
         }
@@ -70,11 +60,21 @@ namespace QueueSmart.Api.Controllers
         [HttpPost("serve-next/{queueId}")]
         public IActionResult ServeNext(Guid queueId)
         {
-            if (queueId == Guid.Empty)
-                return BadRequest("QueueId is required.");
-
+            if (queueId == Guid.Empty) return BadRequest("QueueId is required.");
             var next = _queueService.ServeNext(queueId);
             return next != null ? Ok(next) : NotFound("No users in queue.");
+        }
+
+        // Endpoint to accept the reorder request
+        [HttpPut("{queueId}/reorder")]
+        public IActionResult ReorderQueue(Guid queueId, [FromBody] ReorderQueueRequest request)
+        {
+            if (queueId == Guid.Empty) return BadRequest("QueueId is required.");
+            if (request.OrderedEntryIds == null || request.OrderedEntryIds.Count == 0) 
+                return BadRequest("No entries provided.");
+
+            _queueService.ReorderQueue(queueId, request.OrderedEntryIds);
+            return Ok("Queue reordered.");
         }
     }
 }

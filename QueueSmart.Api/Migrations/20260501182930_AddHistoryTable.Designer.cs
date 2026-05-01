@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using QueueSmart.Api.Data;
@@ -11,9 +12,11 @@ using QueueSmart.Api.Data;
 namespace QueueSmart.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260501182930_AddHistoryTable")]
+    partial class AddHistoryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,6 +79,26 @@ namespace QueueSmart.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Queues");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("10000000-0000-0000-0000-000000000001"),
+                            CreatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            QueueLength = 8,
+                            ServiceId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Status = "open",
+                            UpdatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("20000000-0000-0000-0000-000000000002"),
+                            CreatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            QueueLength = 3,
+                            ServiceId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Status = "open",
+                            UpdatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("QueueSmart.Api.Models.QueueEntry", b =>
@@ -143,6 +166,41 @@ namespace QueueSmart.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Services");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            AdminId = 0,
+                            CreatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Walk-in general medical consultation.",
+                            Duration = 15,
+                            Name = "General Consultation",
+                            Priority = 2,
+                            UpdatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            AdminId = 0,
+                            CreatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Submission and processing of official documents.",
+                            Duration = 10,
+                            Name = "Document Processing",
+                            Priority = 1,
+                            UpdatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            AdminId = 0,
+                            CreatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "IT and device troubleshooting desk.",
+                            Duration = 20,
+                            Name = "Technical Support",
+                            Priority = 0,
+                            UpdatedAt = new DateTime(2026, 4, 10, 0, 0, 0, 0, DateTimeKind.Utc)
+                        });
                 });
 
             modelBuilder.Entity("QueueSmart.Api.Models.ServiceHistoryEntry", b =>

@@ -6,6 +6,11 @@ namespace QueueSmart.Api.DTOs
         public Guid QueueId { get; set; }
     }
 
+    public class ReorderQueueRequest
+    {
+        public List<int> OrderedEntryIds { get; set; } = new();
+    }
+
     public class QueueEntryResponse
     {
         public int Id { get; set; }

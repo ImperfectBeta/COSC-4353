@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Models;
 
@@ -8,20 +9,20 @@ namespace QueueSmart.Api.Services
 {
     public class QueueService : IQueueService
     {
-        private static List<QueueEntry> _queue = new();
-        private static int _nextId = 1;
+        private readonly AppDbContext _context;
         private readonly INotificationService _notificationService;
         private readonly IUserStore _userStore;
 
-        public QueueService(INotificationService notificationService, IUserStore userStore)
+        public QueueService(AppDbContext context, INotificationService notificationService, IUserStore userStore)
         {
+            _context = context;
             _notificationService = notificationService;
             _userStore = userStore;
         }
 
         public QueueEntryResponse JoinQueue(JoinQueueRequest request)
         {
-            bool alreadyInQueue = _queue.Any(e =>
+            bool alreadyInQueue = _context.QueueEntries.Any(e =>
                 e.UserId == request.UserId &&
                 e.QueueId == request.QueueId &&
                 e.Status == "waiting");
@@ -31,14 +32,14 @@ namespace QueueSmart.Api.Services
 
             var entry = new QueueEntry
             {
-                QueueEntryId = _nextId++,
                 UserId = request.UserId,
                 QueueId = request.QueueId,
                 JoinTime = DateTime.UtcNow,
                 Status = "waiting"
             };
 
-            _queue.Add(entry);
+            _context.QueueEntries.Add(entry);
+            _context.SaveChanges(); 
 
             // Calculate accurate wait time upon joining
             var orderedQueue = GetOrderedQueue(request.QueueId);
@@ -57,7 +58,7 @@ namespace QueueSmart.Api.Services
 
         public bool LeaveQueue(int entryId, int userId)
         {
-            var entry = _queue.FirstOrDefault(e =>
+            var entry = _context.QueueEntries.FirstOrDefault(e =>
                 e.QueueEntryId == entryId &&
                 e.UserId == userId &&
                 e.Status == "waiting");
@@ -65,6 +66,8 @@ namespace QueueSmart.Api.Services
             if (entry == null) return false;
 
             entry.Status = "cancelled";
+            _context.SaveChanges(); 
+            
             return true;
         }
 
@@ -82,7 +85,10 @@ namespace QueueSmart.Api.Services
 
         public List<QueueEntryResponse> GetUserEntries(int userId)
         {
-            var entries = _queue.Where(e => e.UserId == userId && e.Status == "waiting").ToList();
+            var entries = _context.QueueEntries
+                .Where(e => e.UserId == userId && e.Status == "waiting")
+                .ToList();
+                
             return entries.Select(e =>
             {
                 var response = MapToResponse(e);
@@ -101,6 +107,7 @@ namespace QueueSmart.Api.Services
             if (next == null) return null;
 
             next.Status = "serving";
+            _context.SaveChanges();
 
             // Check who is now at the front of the line to notify them
             var userAlmostReady = orderedQueue.Skip(1).FirstOrDefault();
@@ -114,16 +121,15 @@ namespace QueueSmart.Api.Services
 
         private List<QueueEntry> GetOrderedQueue(Guid queueId)
         {
-            return _queue
+            return _context.QueueEntries
                 .Where(e => e.QueueId == queueId && e.Status == "waiting")
-                .OrderBy(e => e.Position)
-                .ThenBy(e => e.JoinTime)
+                .OrderBy(e => e.JoinTime) 
                 .ToList();
         }
 
         private int CalculateWaitTime(Guid queueId, int position)
         {
-            int duration = 10; // defaults to 10 for now
+            int duration = 10; 
             return position * duration;
         }
 

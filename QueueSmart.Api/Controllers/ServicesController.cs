@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using QueueSmart.Api.DTOs;
 using QueueSmart.Api.Models;
 using QueueSmart.Api.Services;
@@ -14,14 +15,14 @@ public class ServicesController : ControllerBase
     private readonly IServiceStore _serviceStore;
     private readonly IHistoryStore _historyStore;
     private readonly IQueueStore _queueStore;
-    private readonly IQueueService _queueService;
+    private readonly AppDbContext _context;
 
-    public ServicesController(IServiceStore serviceStore, IHistoryStore historyStore, IQueueStore queueStore, IQueueService queueService)
+    public ServicesController(IServiceStore serviceStore, IHistoryStore historyStore, IQueueStore queueStore, AppDbContext context)
     {
         _serviceStore = serviceStore;
         _historyStore = historyStore;
         _queueStore = queueStore;
-        _queueService = queueService;
+        _context = context;
     }
 
     [HttpGet] // get /api/services
@@ -33,7 +34,10 @@ public class ServicesController : ControllerBase
         var response = services.Select(s => 
         {
             var activeQ = activeQueues.FirstOrDefault(q => q.ServiceId == s.Id);
-            int length = activeQ != null ? _queueService.GetQueue(activeQ.Id).Count : 0;
+            int length = activeQ != null 
+                ? _context.QueueEntries.Count(qe => qe.QueueId == activeQ.Id && qe.Status == "waiting") 
+                : 0;
+                
             return ServiceResponse.FromService(s, activeQ, length);
         });
         return Ok(response);
@@ -47,7 +51,11 @@ public class ServicesController : ControllerBase
             return NotFound();
 
         var activeQueue = await _queueStore.GetActiveQueueForServiceAsync(id);
-        int length = activeQueue != null ? _queueService.GetQueue(activeQueue.Id).Count : 0;
+        
+        int length = activeQueue != null 
+            ? await _context.QueueEntries.CountAsync(qe => qe.QueueId == activeQueue.Id && qe.Status == "waiting") 
+            : 0;
+            
         return Ok(ServiceResponse.FromService(service, activeQueue, length));
     }
 
@@ -100,7 +108,10 @@ public class ServicesController : ControllerBase
         });
 
         var activeQueue = await _queueStore.GetActiveQueueForServiceAsync(id);
-        int length = activeQueue != null ? _queueService.GetQueue(activeQueue.Id).Count : 0;
+        int length = activeQueue != null 
+            ? await _context.QueueEntries.CountAsync(qe => qe.QueueId == activeQueue.Id && qe.Status == "waiting") 
+            : 0;
+            
         return Ok(ServiceResponse.FromService(result, activeQueue, length));
     }
 

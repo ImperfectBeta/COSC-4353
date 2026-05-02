@@ -25,7 +25,7 @@
 </tr>
 <tr>
 <th>File(s):</th>
-<td class="overflow-wrap"><a href="#UserschasebrockProgrammingCOSC4353QueueSmartApiControllersHistoryControllercs" class="navigatetohash">/Users/chasebrock/Programming/COSC-4353/QueueSmart.Api/Controllers/HistoryController.cs</a></td>
+<td class="overflow-wrap"><a href="#CMyStuffGithubCOSC4353COSC4353QueueSmartApiControllersHistoryControllercs" class="navigatetohash">C:\My Stuff\Github\COSC4353\COSC-4353\QueueSmart.Api\Controllers\HistoryController.cs</a></td>
 </tr>
 </table>
 </div>
@@ -36,28 +36,28 @@
 <div class="card">
 <div class="card-header">Line coverage</div>
 <div class="card-body">
-<div class="large cardpercentagebar cardpercentagebar27">73%</div>
+<div class="large cardpercentagebar cardpercentagebar20">80%</div>
 <div class="table">
 <table>
 <tr>
 <th>Covered lines:</th>
-<td class="limit-width right" title="11">11</td>
+<td class="limit-width right" title="24">24</td>
 </tr>
 <tr>
 <th>Uncovered lines:</th>
-<td class="limit-width right" title="4">4</td>
+<td class="limit-width right" title="6">6</td>
 </tr>
 <tr>
 <th>Coverable lines:</th>
-<td class="limit-width right" title="15">15</td>
+<td class="limit-width right" title="30">30</td>
 </tr>
 <tr>
 <th>Total lines:</th>
-<td class="limit-width right" title="37">37</td>
+<td class="limit-width right" title="51">51</td>
 </tr>
 <tr>
 <th>Line coverage:</th>
-<td class="limit-width right" title="11 of 15">73.3%</td>
+<td class="limit-width right" title="24 of 30">80%</td>
 </tr>
 </table>
 </div>
@@ -71,15 +71,15 @@
 <table>
 <tr>
 <th>Covered branches:</th>
-<td class="limit-width right" title="1">1</td>
+<td class="limit-width right" title="5">5</td>
 </tr>
 <tr>
 <th>Total branches:</th>
-<td class="limit-width right" title="2">2</td>
+<td class="limit-width right" title="10">10</td>
 </tr>
 <tr>
 <th>Branch coverage:</th>
-<td class="limit-width right" title="1 of 2">50%</td>
+<td class="limit-width right" title="5 of 10">50%</td>
 </tr>
 </table>
 </div>
@@ -108,13 +108,17 @@
 <thead><tr><th>Method</th><th>Branch coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" target="_blank"><i class="icon-info-circled"></i></a></th><th>Crap Score <a href="https://googletesting.blogspot.de/2011/02/this-code-is-crap.html" target="_blank"><i class="icon-info-circled"></i></a></th><th>Cyclomatic complexity <a href="https://en.wikipedia.org/wiki/Cyclomatic_complexity" target="_blank"><i class="icon-info-circled"></i></a></th><th>Line coverage <a href="https://en.wikipedia.org/wiki/Code_coverage" target="_blank"><i class="icon-info-circled"></i></a></th></tr></thead>
 <tbody>
 <tr><td title=".ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore)"><a href="#file0_line15" class="navigatetohash">.ctor(...)</a></td><td>100%</td><td>1</td><td>1</td><td>100%</td></tr>
+<tr><td title=".ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore,QueueSmart.Api.Services.IQueueStore)"><a href="#file0_line16" class="navigatetohash">.ctor(...)</a></td><td>100%</td><td>1</td><td>1</td><td>100%</td></tr>
 <tr><td title="GetAll(System.Nullable`1&lt;System.Guid&gt;)"><a href="#file0_line23" class="navigatetohash">GetAll(...)</a></td><td>50%</td><td>2</td><td>2</td><td>100%</td></tr>
+<tr><td title="GetAll()"><a href="#file0_line25" class="navigatetohash">GetAll()</a></td><td>50%</td><td>2</td><td>2</td><td>100%</td></tr>
 <tr><td title="GetStatistics()"><a href="#file0_line33" class="navigatetohash">GetStatistics()</a></td><td>100%</td><td>2</td><td>1</td><td>0%</td></tr>
+<tr><td title="GetStatistics()"><a href="#file0_line35" class="navigatetohash">GetStatistics()</a></td><td>50%</td><td>2</td><td>2</td><td>66.66%</td></tr>
+<tr><td title="GetCurrentAdminId()"><a href="#file0_line44" class="navigatetohash">GetCurrentAdminId()</a></td><td>50%</td><td>5</td><td>4</td><td>66.66%</td></tr>
 </tbody>
 </table>
 </div>
 <h1>File(s)</h1>
-<h2 id="UserschasebrockProgrammingCOSC4353QueueSmartApiControllersHistoryControllercs">/Users/chasebrock/Programming/COSC-4353/QueueSmart.Api/Controllers/HistoryController.cs</h2>
+<h2 id="CMyStuffGithubCOSC4353COSC4353QueueSmartApiControllersHistoryControllercs">C:\My Stuff\Github\COSC4353\COSC-4353\QueueSmart.Api\Controllers\HistoryController.cs</h2>
 <div class="table-responsive">
 <table class="lineAnalysis">
 <thead><tr><th></th><th>#</th><th>Line</th><th></th><th>Line coverage</th></tr></thead>
@@ -132,40 +136,58 @@
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line11"></a><code>11</code></td><td></td><td class="lightgray"><code>{</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line12"></a><code>12</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;IHistoryStore&nbsp;_historyStore;</code></td></tr>
 <tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line13"></a><code>13</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;IServiceStore&nbsp;_serviceStore;</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line14"></a><code>14</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line15"></a><code>15</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;HistoryController(IHistoryStore&nbsp;historyStore,&nbsp;IServiceStore&nbsp;serviceStore)</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line16"></a><code>16</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line17"></a><code>17</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_historyStore&nbsp;=&nbsp;historyStore;</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line18"></a><code>18</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_serviceStore&nbsp;=&nbsp;serviceStore;</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line19"></a><code>19</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line20"></a><code>20</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;[HttpGet]&nbsp;//&nbsp;GET&nbsp;/api/history</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line22"></a><code>22</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;ActionResult&lt;IEnumerable&lt;ServiceHistoryEntry&gt;&gt;&nbsp;GetAll([FromQuery]&nbsp;Guid?&nbsp;serviceId)</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
-<tr class="coverableline" title="Partially covered (2 visits, 1 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;entries&nbsp;=&nbsp;serviceId.HasValue</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?&nbsp;_historyStore.GetByServiceId(serviceId.Value)</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;_historyStore.GetAll();</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Ok(entries);</code></td></tr>
-<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightgray"><code></code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;[HttpGet(&quot;statistics&quot;)]&nbsp;//&nbsp;GET&nbsp;/api/history/statistics</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;ActionResult&lt;ServiceStatisticsResponse&gt;&nbsp;GetStatistics()</code></td></tr>
-<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line33"></a><code>33</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
-<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line34"></a><code>34</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;stats&nbsp;=&nbsp;_historyStore.GetStatistics(_serviceStore);</code></td></tr>
-<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line35"></a><code>35</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Ok(stats);</code></td></tr>
-<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line36"></a><code>36</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
-<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line37"></a><code>37</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line14"></a><code>14</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;readonly&nbsp;IQueueStore&nbsp;_queueStore;</code></td></tr>
+<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line15"></a><code>15</code></td><td></td><td class="lightgreen"><code></code></td></tr>
+<tr class="coverableline" title="Covered (4 visits)" data-coverage="{'AllTestMethods': {'VC': '4', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4</td><td class="rightmargin right"><a id="file0_line16"></a><code>16</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;HistoryController(IHistoryStore&nbsp;historyStore,&nbsp;IServiceStore&nbsp;serviceStore,&nbsp;IQueueStore&nbsp;queueStore)</code></td></tr>
+<tr class="coverableline" title="Covered (4 visits)" data-coverage="{'AllTestMethods': {'VC': '4', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4</td><td class="rightmargin right"><a id="file0_line17"></a><code>17</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr class="coverableline" title="Covered (4 visits)" data-coverage="{'AllTestMethods': {'VC': '4', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4</td><td class="rightmargin right"><a id="file0_line18"></a><code>18</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_historyStore&nbsp;=&nbsp;historyStore;</code></td></tr>
+<tr class="coverableline" title="Covered (4 visits)" data-coverage="{'AllTestMethods': {'VC': '4', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">4</td><td class="rightmargin right"><a id="file0_line19"></a><code>19</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_serviceStore&nbsp;=&nbsp;serviceStore;</code></td></tr>
+<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line20"></a><code>20</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_queueStore&nbsp;=&nbsp;queueStore;</code></td></tr>
+<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line21"></a><code>21</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line22"></a><code>22</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line23"></a><code>23</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;[HttpGet]</code></td></tr>
+<tr class="coverableline" title="Partially covered (2 visits, 1 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line24"></a><code>24</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;async&nbsp;Task&lt;ActionResult&lt;IEnumerable&lt;ServiceHistoryEntry&gt;&gt;&gt;&nbsp;GetAll([FromQuery]&nbsp;Guid?&nbsp;serviceId)</code></td></tr>
+<tr class="coverableline" title="Covered (3 visits)" data-coverage="{'AllTestMethods': {'VC': '3', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">3</td><td class="rightmargin right"><a id="file0_line25"></a><code>25</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr class="coverableline" title="Covered (3 visits, 1 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '3', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">3</td><td class="rightmargin right"><a id="file0_line26"></a><code>26</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;entries&nbsp;=&nbsp;serviceId.HasValue</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line27"></a><code>27</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?&nbsp;await&nbsp;_historyStore.GetByServiceIdAsync(serviceId.Value)</code></td></tr>
+<tr class="coverableline" title="Covered (3 visits)" data-coverage="{'AllTestMethods': {'VC': '3', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">3</td><td class="rightmargin right"><a id="file0_line28"></a><code>28</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;await&nbsp;_historyStore.GetAllAsync();</code></td></tr>
+<tr class="coverableline" title="Covered (2 visits)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line29"></a><code>29</code></td><td></td><td class="lightgreen"><code></code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line30"></a><code>30</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Ok(entries);</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line31"></a><code>31</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line32"></a><code>32</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line33"></a><code>33</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;[HttpGet(&quot;statistics&quot;)]</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line34"></a><code>34</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;public&nbsp;async&nbsp;Task&lt;ActionResult&lt;ServiceStatisticsResponse&gt;&gt;&nbsp;GetStatistics()</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line35"></a><code>35</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line36"></a><code>36</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;adminId&nbsp;=&nbsp;GetCurrentAdminId();</code></td></tr>
+<tr class="coverableline" title="Partially covered (2 visits, 1 of 2 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '2', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">2</td><td class="rightmargin right"><a id="file0_line37"></a><code>37</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(adminId&nbsp;==&nbsp;null)&nbsp;return&nbsp;Unauthorized(&quot;Missing&nbsp;User&nbsp;ID&nbsp;header.&quot;);</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line38"></a><code>38</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line39"></a><code>39</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var&nbsp;stats&nbsp;=&nbsp;await&nbsp;_historyStore.GetStatisticsAsync(_serviceStore,&nbsp;_queueStore,&nbsp;adminId.Value);</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line40"></a><code>40</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;Ok(stats);</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line41"></a><code>41</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line42"></a><code>42</code></td><td></td><td class="lightgray"><code></code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line43"></a><code>43</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;private&nbsp;int?&nbsp;GetCurrentAdminId()</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line44"></a><code>44</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr class="coverableline" title="Partially covered (1 visits, 2 of 4 branches are covered)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'orange'}}"><td class="orange">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line45"></a><code>45</code></td><td class="percentagebar percentagebar50"><i class="icon-fork"></i></td><td class="lightorange"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;(Request.Headers.TryGetValue(&quot;X-User-Id&quot;,&nbsp;out&nbsp;var&nbsp;userIdStr)&nbsp;&amp;&amp;&nbsp;int.TryParse(userIdStr,&nbsp;out&nbsp;int&nbsp;adminId))</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line46"></a><code>46</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{</code></td></tr>
+<tr class="coverableline" title="Not covered (0 visits)" data-coverage="{'AllTestMethods': {'VC': '0', 'LVS': 'red'}}"><td class="red">&nbsp;</td><td class="leftmargin rightmargin right">0</td><td class="rightmargin right"><a id="file0_line47"></a><code>47</code></td><td></td><td class="lightred"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;adminId;</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line48"></a><code>48</code></td><td></td><td class="lightgray"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line49"></a><code>49</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;null;</code></td></tr>
+<tr class="coverableline" title="Covered (1 visits)" data-coverage="{'AllTestMethods': {'VC': '1', 'LVS': 'green'}}"><td class="green">&nbsp;</td><td class="leftmargin rightmargin right">1</td><td class="rightmargin right"><a id="file0_line50"></a><code>50</code></td><td></td><td class="lightgreen"><code>&nbsp;&nbsp;&nbsp;&nbsp;}</code></td></tr>
+<tr class="" title="Not coverable" data-coverage="{'AllTestMethods': {'VC': '', 'LVS': 'gray'}}"><td class="gray">&nbsp;</td><td class="leftmargin rightmargin right"></td><td class="rightmargin right"><a id="file0_line51"></a><code>51</code></td><td></td><td class="lightgray"><code>}</code></td></tr>
 </tbody>
 </table>
 </div>
-<div class="footer">Generated by: ReportGenerator 5.5.4.0<br />3/27/2026 - 10:53:12 PM<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
+<div class="footer">Generated by: ReportGenerator 5.5.7.0<br />5/1/2026 - 11:25:36 PM<br /><a href="https://github.com/danielpalme/ReportGenerator">GitHub</a> | <a href="https://reportgenerator.io">reportgenerator.io</a></div></div>
 <div class="containerright">
 <div class="containerrightfixed">
 <h1>Methods/Properties</h1>
 <a href="#file0_line15" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - .ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore)"><i class="icon-cube"></i>.ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore)</a><br />
+<a href="#file0_line16" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - .ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore,QueueSmart.Api.Services.IQueueStore)"><i class="icon-cube"></i>.ctor(QueueSmart.Api.Services.IHistoryStore,QueueSmart.Api.Services.IServiceStore,QueueSmart.Api.Services.IQueueStore)</a><br />
 <a href="#file0_line23" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - GetAll(System.Nullable`1&lt;System.Guid&gt;)"><i class="icon-cube"></i>GetAll(System.Nullable`1&lt;System.Guid&gt;)</a><br />
-<a href="#file0_line33" class="navigatetohash percentagebar percentagebar0" title="Line coverage: 0% - GetStatistics()"><i class="icon-cube"></i>GetStatistics()</a><br />
+<a href="#file0_line25" class="navigatetohash percentagebar percentagebar100" title="Line coverage: 100% - GetAll()"><i class="icon-cube"></i>GetAll()</a><br />
+<a href="#file0_line33" class="navigatetohash percentagebar percentagebar50" title="Line coverage: 50% - GetStatistics()"><i class="icon-cube"></i>GetStatistics()</a><br />
+<a href="#file0_line35" class="navigatetohash percentagebar percentagebar60" title="Line coverage: 66.6% - GetStatistics()"><i class="icon-cube"></i>GetStatistics()</a><br />
+<a href="#file0_line44" class="navigatetohash percentagebar percentagebar60" title="Line coverage: 66.6% - GetCurrentAdminId()"><i class="icon-cube"></i>GetCurrentAdminId()</a><br />
 <br/></div>
 </div></div>
 <script type="text/javascript">

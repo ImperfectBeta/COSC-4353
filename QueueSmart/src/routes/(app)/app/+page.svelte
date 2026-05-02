@@ -1,5 +1,6 @@
 <script lang="ts">
     import QueueCard from "$lib/components/queue-card.svelte";
+    import ChatWidget from "$lib/components/chat-widget.svelte";
     import Search from "@lucide/svelte/icons/search";
     import TicketModal from "$lib/components/ticket-modal.svelte";
     import type { Queue, QueueEntry } from "$lib/types";
@@ -106,3 +107,5 @@
         selectedQueue = null;
     }}
 />
+
+<ChatWidget queues={data.suggestedQueues} userId={Number(data.user.userId)} />

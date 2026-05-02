@@ -107,6 +107,7 @@ namespace QueueSmart.Api.Services
             if (next == null) return null;
 
             next.Status = "serving";
+            next.ServedTime = DateTime.UtcNow;
             _context.SaveChanges();
 
             // Check who is now at the front of the line to notify them

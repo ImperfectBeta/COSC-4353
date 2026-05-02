@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.SignalR;
 
 namespace QueueSmart.Api.Models;
 
@@ -18,6 +17,8 @@ public class QueueEntry
     [Required]
     public int Position { get; set; }
     public DateTime JoinTime { get; set; } = DateTime.UtcNow;
+
+    public DateTime? ServedTime { get; set; }
 
     [Required]
     public string Status { get; set; } = "waiting";

@@ -7,7 +7,8 @@
         ListIcon,
         LogOutIcon,
         ShieldBan,
-        CircleUser
+        CircleUser,
+        ChartColumn
     } from "@lucide/svelte";
     import { onMount } from "svelte";
     import { get } from "svelte/store";
@@ -22,6 +23,7 @@
         { href: "/admin/services", label: "Service Management", icon: CogIcon },
         { href: "/admin/queue", label: "Queue Management", icon: ListIcon },
         { href: "/admin/history", label: "History", icon: ClockIcon },
+        { href: "/admin/reports", label: "Reports", icon: ChartColumn },
     ];
 
     let authReady = $state(false);

@@ -81,6 +81,9 @@ namespace QueueSmart.Api.Controllers
                     page.PageColor(Colors.White);
                     page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Arial).FontColor(Colors.Black)); 
 
+                    var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+                    var localGeneratedTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, tz);
+
                     page.Header().Column(col =>
                     {
                         col.Item().Row(row =>
@@ -88,7 +91,7 @@ namespace QueueSmart.Api.Controllers
                             row.RelativeItem().Column(column =>
                             {
                                 column.Item().Text("Statistics Report").SemiBold().FontSize(24);
-                                column.Item().Text($"Generated on: {DateTime.UtcNow:yyyy-MM-dd HH:mm UTC}").FontSize(10);
+                                column.Item().Text($"Generated on: {localGeneratedTime:yyyy-MM-dd HH:mm} CDT").FontSize(10);
                             });
                         });
                         
@@ -112,13 +115,13 @@ namespace QueueSmart.Api.Controllers
                     {
                         table.ColumnsDefinition(columns =>
                         {
-                            columns.RelativeColumn();   // Name
-                            columns.RelativeColumn();   // Email
-                            columns.RelativeColumn();   // Service
-                            columns.ConstantColumn(60); // Priority
-                            columns.RelativeColumn();   // Join Time
-                            columns.RelativeColumn();   // Wait Time
-                            columns.ConstantColumn(80); // Status
+                            columns.RelativeColumn();   
+                            columns.RelativeColumn();   
+                            columns.RelativeColumn();   
+                            columns.ConstantColumn(60); 
+                            columns.RelativeColumn();   
+                            columns.RelativeColumn();   
+                            columns.ConstantColumn(80); 
                         });
 
                         table.Header(header =>
@@ -126,7 +129,7 @@ namespace QueueSmart.Api.Controllers
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Customer Name").SemiBold();
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Email Address").SemiBold();
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Service Details").SemiBold();
-                            header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Priority").SemiBold(); // NEW
+                            header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Priority").SemiBold();
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Join Time").SemiBold();
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Wait Time").SemiBold();
                             header.Cell().BorderBottom(1).BorderColor(Colors.Black).PaddingBottom(5).Text("Status").SemiBold();
@@ -139,10 +142,7 @@ namespace QueueSmart.Api.Controllers
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.FullName ?? "N/A");
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.Email ?? "N/A");
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.ServiceName ?? "N/A");
-                            
-                            
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.Priority);
-                            
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.JoinTime.ToString("yyyy-MM-dd HH:mm"));
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(waitTimeStr);
                             table.Cell().PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Grey.Lighten2).Text(item.DisplayStatus).SemiBold();
@@ -203,11 +203,11 @@ namespace QueueSmart.Api.Controllers
             query = query.OrderByDescending(x => x.JoinTime);
 
             var rawData = await query.ToListAsync();
+            var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 
             var reportData = rawData.Select(x => 
             {
                 double? waitMins = null;
-                
                 if (x.Status == "cancelled") 
                 {
                     waitMins = null; 
@@ -224,11 +224,14 @@ namespace QueueSmart.Api.Controllers
                 string displayStatus = x.Status switch
                 {
                     "waiting" => "Active",
-                    "serving" => "Active",
+                    "serving" => "Completed",
                     "completed" => "Completed",
                     "cancelled" => "Cancelled",
                     _ => x.Status
                 };
+
+                
+                var localJoinTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(x.JoinTime, DateTimeKind.Utc), tz);
 
                 return new ReportDataDto
                 {
@@ -236,7 +239,7 @@ namespace QueueSmart.Api.Controllers
                     Email = x.Email,
                     ServiceName = x.ServiceName,
                     Priority = x.Priority.ToString(),
-                    JoinTime = x.JoinTime,
+                    JoinTime = localJoinTime,
                     OriginalStatus = x.Status, 
                     DisplayStatus = displayStatus, 
                     WaitTimeMinutes = waitMins.HasValue ? Math.Round(waitMins.Value, 1) : null

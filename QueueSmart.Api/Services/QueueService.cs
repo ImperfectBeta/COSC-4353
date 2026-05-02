@@ -41,12 +41,10 @@ namespace QueueSmart.Api.Services
             _context.QueueEntries.Add(entry);
             _context.SaveChanges(); 
             
-            // Calculate accurate wait time upon joining
             var orderedQueue = GetOrderedQueue(request.QueueId);
             int position = orderedQueue.FindIndex(e => e.QueueEntryId == entry.QueueEntryId) + 1;
             int estimatedWait = CalculateWaitTime(request.QueueId, position);
 
-            // Trigger Notification
             _notificationService.NotifyUserJoined(request.UserId, request.QueueId, estimatedWait);
 
             var response = MapToResponse(entry);
@@ -106,7 +104,7 @@ namespace QueueSmart.Api.Services
 
             if (next == null) return null;
 
-            next.Status = "serving";
+            next.Status = "completed";
             next.ServedTime = DateTime.UtcNow;
             _context.SaveChanges();
 

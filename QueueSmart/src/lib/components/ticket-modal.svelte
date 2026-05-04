@@ -4,6 +4,7 @@
 		ClockIcon,
 		Building2Icon,
 		TicketIcon,
+		CircleCheckIcon,
 	} from "@lucide/svelte";
 	import Button from "./button.svelte";
 	import type { Queue, QueueEntry } from "$lib/types";
@@ -25,7 +26,7 @@
 
 {#if open && queue && entry}
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+		class="fixed inset-0 z-50 flex items-center justify-center p-4"
 		role="dialog"
 		aria-modal="true"
 	>
@@ -51,7 +52,7 @@
 			out:scale={{ duration: 200, start: 0.95, opacity: 0 }}
 		>
 			<div
-				class="h-40 bg-accent/5 relative overflow-hidden border-b border-accent/10"
+				class="h-24 bg-accent/5 relative overflow-hidden border-b border-accent/10"
 			>
 				<div
 					class="absolute -top-10 -right-10 w-48 h-48 bg-primary/20 rounded-full blur-[60px] animate-pulse-slow"
@@ -97,42 +98,76 @@
 
 			<div class="p-6 sm:p-8 space-y-8">
 				<div class="flex flex-col items-center justify-center">
-					<p
-						class="text-xs font-bold uppercase tracking-widest text-muted/60 mb-6"
-					>
-						Current Position
-					</p>
-
-					<div class="relative group cursor-default">
-						<div
-							class="absolute inset-0 rounded-full border border-accent/10 scale-[1.3]"
-						></div>
-						<div
-							class="absolute inset-0 rounded-full border border-dashed border-primary/20 animate-spin-slow scale-[1.15]"
-						></div>
-
-						<div
-							class="relative size-36 rounded-full bg-background flex flex-col items-center justify-center border-4 border-accent/5 shadow-xl ring-4 ring-background z-10 transition-transform duration-500 group-hover:scale-105"
+					{#if entry.position === 1}
+						<p
+							class="text-base font-bold uppercase tracking-widest text-foreground mb-6"
 						>
-							<span
-								class="font-arvo text-6xl font-black text-foreground tabular-nums tracking-tighter"
-							>
-								{entry.position}
-							</span>
-							<span
-								class="text-[10px] font-bold text-muted/50 uppercase tracking-widest mt-1"
-							>
-								In Line
-							</span>
-						</div>
+							It's Your Turn!
+						</p>
 
-						<div
-							class="absolute inset-0 bg-primary/20 blur-3xl -z-10 opacity-50 group-hover:opacity-70 transition-opacity duration-500"
-						></div>
-					</div>
+						<div class="relative group cursor-default">
+							<div
+								class="absolute inset-0 rounded-full border border-primary/30 scale-[1.3] animate-ping"
+								style="animation-duration: 3s;"
+							></div>
+							<div
+								class="absolute inset-0 rounded-full border border-dashed border-primary/50 animate-spin-slow scale-[1.15]"
+							></div>
+
+							<div
+								class="relative size-36 rounded-full bg-primary/10 flex flex-col items-center justify-center border-4 border-primary/20 shadow-xl shadow-primary/30 ring-4 ring-background z-10 transition-transform duration-500 group-hover:scale-105"
+							>
+								<CircleCheckIcon
+									strokeWidth={1}
+									class="size-24 text-primary"
+								/>
+							</div>
+
+							<div
+								class="absolute inset-0 bg-primary/40 blur-3xl -z-10 opacity-70 group-hover:opacity-90 transition-opacity duration-500"
+							></div>
+						</div>
+					{:else}
+						<p
+							class="text-xs font-bold uppercase tracking-widest text-muted/60 mb-6"
+						>
+							Current Position
+						</p>
+
+						<div class="relative group cursor-default">
+							<div
+								class="absolute inset-0 rounded-full border border-accent/10 scale-[1.3]"
+							></div>
+							<div
+								class="absolute inset-0 rounded-full border border-dashed border-primary/20 animate-spin-slow scale-[1.15]"
+							></div>
+
+							<div
+								class="relative size-36 rounded-full bg-background flex flex-col items-center justify-center border-4 border-accent/5 shadow-xl ring-4 ring-background z-10 transition-transform duration-500 group-hover:scale-105"
+							>
+								<span
+									class="font-arvo text-6xl font-black text-foreground tabular-nums tracking-tighter"
+								>
+									{entry.position}
+								</span>
+								<span
+									class="text-[10px] font-bold text-muted/50 uppercase tracking-widest mt-1"
+								>
+									In Line
+								</span>
+							</div>
+
+							<div
+								class="absolute inset-0 bg-primary/20 blur-3xl -z-10 opacity-50 group-hover:opacity-70 transition-opacity duration-500"
+							></div>
+						</div>
+					{/if}
 				</div>
 
-				<div class="grid grid-cols-2 gap-4">
+				<div
+					class="grid grid-cols-2 gap-4"
+					hidden={entry.position === 1}
+				>
 					<div
 						class="group bg-accent/5 hover:bg-accent/10 rounded-2xl p-4 flex flex-col items-center justify-center text-center gap-1 border border-transparent hover:border-accent/10"
 					>
@@ -173,6 +208,7 @@
 
 				<div
 					class="bg-muted text-muted-foreground rounded-xl p-4 text-xs/relaxed text-center font-medium"
+					hidden={entry.position === 1}
 				>
 					<p>
 						Please arrive 5 minutes before your estimated time. You
@@ -180,7 +216,7 @@
 					</p>
 				</div>
 
-				<div class="pt-2">
+				<div class={`pt-2 ${entry.position === 1 ? "pt-16" : ""}`}>
 					<Button
 						variant="primary"
 						class="w-full justify-center h-12 text-base shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98]"
